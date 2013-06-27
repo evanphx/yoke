@@ -20,6 +20,8 @@
 *******************************************************************************/
 #define LOG_GROUP LOG_GROUP_DRV_ACPI
 
+#include "VBoxDD.h"
+
 #ifdef RT_OS_WINDOWS
 # include <windows.h>
 #endif
@@ -54,8 +56,6 @@
 # include <fcntl.h>
 # include <unistd.h>
 #endif
-
-#include "VBoxDD.h"
 
 
 /*******************************************************************************

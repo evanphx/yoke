@@ -322,7 +322,7 @@ if1of ($(KBUILD_TARGET), darwin linux solaris win)
  ifdef VBOX_WITH_NATIVE_DTRACE
   VBoxDrv_SOURCES        += \
   	SUPDrv-dtrace.cpp
-  SUPDrv-dtrace.cpp_DEFS.darwin += VBOX_PATH_MACOSX_DTRACE_H=\"$(VBOX_PATH_MACOSX_SDK)/usr/include/sys/dtrace.h\"
+  SUPDrv-dtrace.cpp_DEFS.darwin += VBOX_PATH_MACOSX_DTRACE_H=\"/usr/include/sys/dtrace.h\"
  endif
  ifn1of ($(KBUILD_TARGET), linux freebsd)
   VBoxDrv_SOURCES        += \

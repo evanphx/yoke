@@ -55,6 +55,9 @@
 #include <IOKit/IOService.h>
 #include <IOKit/IOUserClient.h>
 #include <IOKit/IOKitKeys.h>
+
+#define __OPEN_SOURCE__ 1
+
 #include <IOKit/usb/USB.h>
 #include <IOKit/usb/IOUSBDevice.h>
 #include <IOKit/usb/IOUSBInterface.h>

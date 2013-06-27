@@ -71,22 +71,22 @@ OUT_PATH_OVERRIDE=0
 SETUP_WINE=
 TARGET_MACHINE=""
 TARGET_CPU=""
-WITH_XPCOM=1
-WITH_PYTHON=1
-WITH_JAVA=1
+WITH_XPCOM=0
+WITH_PYTHON=0
+WITH_JAVA=0
 WITH_VMMRAW=1
-WITH_LIBIDL=1
+WITH_LIBIDL=0
 WITH_GSOAP=0
-WITH_QT4=1
-WITH_SDL=1
-WITH_SDL_TTF=1
-WITH_X11=1
-WITH_ALSA=1
-WITH_PULSE=1
-WITH_DBUS=1
+WITH_QT4=0
+WITH_SDL=0
+WITH_SDL_TTF=0
+WITH_X11=0
+WITH_ALSA=0
+WITH_PULSE=0
+WITH_DBUS=0
 WITH_DEVMAPPER=1
 WITH_KMODS=1
-WITH_OPENGL=1
+WITH_OPENGL=0
 WITH_HARDENING=1
 WITH_UDPTUNNEL=1
 WITH_VDE=0
@@ -2067,6 +2067,11 @@ check_darwinversion()
   test_header "Darwin version"
   darwin_ver=`uname -r`
   case "$darwin_ver" in
+    12\.*)
+      darwin_ver="10.8" # Lion
+      sdk=/Developer/SDKs/MacOSX10.8.sdk
+      CXX_FLAGS=""
+      ;;
     11\.*)
       darwin_ver="10.7" # Lion
       sdk=/Developer/SDKs/MacOSX10.6.sdk
