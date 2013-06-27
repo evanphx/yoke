@@ -44,11 +44,11 @@ if  !defined(VBOX_ONLY_DOCS) \
  endif
  ifdef VBOX_WITH_VBOXDRV
   LIBRARIES       += SUPR0IdcClient
-  SYSMODS.freebsd += vboxdrv
-  SYSMODS.os2     += VBoxDrv
+  SYSMODS.freebsd += yokedrv
+  SYSMODS.os2     += YokeDrv
  endif
- INSTALLS.linux   += vboxdrv-mod
- INSTALLS.freebsd += vboxdrv-mod
+ INSTALLS.linux   += yokedrv-mod
+ INSTALLS.freebsd += yokedrv-mod
 
  #
  # Include sub-makefile(s).
@@ -59,10 +59,10 @@ if  !defined(VBOX_ONLY_DOCS) \
  # Populate FILES_VBOXDRV_NOBIN and FILES_VBOXDRV_BIN
  #
  ifeq ($(KBUILD_TARGET),linux)
-  include $(PATH_SUB_CURRENT)/linux/files_vboxdrv
+  include $(PATH_SUB_CURRENT)/linux/files_yokedrv
  endif
  ifeq ($(KBUILD_TARGET),freebsd)
-  include $(PATH_SUB_CURRENT)/freebsd/files_vboxdrv
+  include $(PATH_SUB_CURRENT)/freebsd/files_yokedrv
  endif
 endif # !VBOX_ONLY_DOCS && !VBOX_ONLY_EXTPACKS && !VBOX_ONLY_TESTSUITE
 
@@ -172,30 +172,30 @@ if  !defined(VBOX_ONLY_DOCS) \
 ifeq ($(KBUILD_TARGET),os2)
 
 #
-# VBoxDrv.sys - The OS/2 driver.
+# YokeDrv.sys - The OS/2 driver.
 #
-VBoxDrv_TEMPLATE      = VBOXR0DRV
-VBoxDrv_DEFS          = IN_RT_R0 IN_SUP_R0
-VBoxDrv_INCS         := $(PATH_SUB_CURRENT)
-#VBoxDrv_LDFLAGS       = -s -t -v
-VBoxDrv_SOURCES       = \
+YokeDrv_TEMPLATE      = VBOXR0DRV
+YokeDrv_DEFS          = IN_RT_R0 IN_SUP_R0
+YokeDrv_INCS         := $(PATH_SUB_CURRENT)
+#YokeDrv_LDFLAGS       = -s -t -v
+YokeDrv_SOURCES       = \
 	os2/SUPDrvA-os2.asm \
 	os2/SUPDrv-os2.def
-VBoxDrv_LIBS          = \
-	$(VBoxDrvLib_1_TARGET) \
+YokeDrv_LIBS          = \
+	$(YokeDrvLib_1_TARGET) \
 	$(PATH_STAGE_LIB)/RuntimeR0Drv$(VBOX_SUFF_LIB) \
 	$(VBOX_GCC_LIBGCC) \
 	end
 
 # temp hack to ensure that SUPDrvA-os2.asm is first in the link.
-LIBRARIES += VBoxDrvLib
-VBoxDrvLib_TEMPLATE   = VBOXR0DRV
-VBoxDrvLib_INSTTYPE   = none
-VBoxDrvLib_DEFS       = IN_RT_R0 IN_SUP_R0
-VBoxDrvLib_INCS      := \
+LIBRARIES += YokeDrvLib
+YokeDrvLib_TEMPLATE   = VBOXR0DRV
+YokeDrvLib_INSTTYPE   = none
+YokeDrvLib_DEFS       = IN_RT_R0 IN_SUP_R0
+YokeDrvLib_INCS      := \
 	. \
 	$(PATH_ROOT)/src/VBox/Runtime/include
-VBoxDrvLib_SOURCES    = \
+YokeDrvLib_SOURCES    = \
 	os2/SUPDrv-os2.cpp \
 	SUPDrv.c \
 	SUPDrvSem.c
@@ -204,13 +204,13 @@ endif # os2
 ifeq ($(KBUILD_TARGET),freebsd)
 
 #
-# vboxdrv.ko - The FreeBSD Kernel Module.
+# yokedrv.ko - The FreeBSD Kernel Module.
 #
-vboxdrv_TEMPLATE      = VBOXR0DRV
-vboxdrv_DEFS          = IN_RT_R0 IN_SUP_R0 SUPDRV_WITH_RELEASE_LOGGER VBOX_SVN_REV=$(VBOX_SVN_REV)
-vboxdrv_INCS         := $(PATH_SUB_CURRENT)
-vboxdrv_LIBS          = $(PATH_STAGE_LIB)/RuntimeR0Drv$(VBOX_SUFF_LIB)
-vboxdrv_SOURCES      := \
+yokedrv_TEMPLATE      = VBOXR0DRV
+yokedrv_DEFS          = IN_RT_R0 IN_SUP_R0 SUPDRV_WITH_RELEASE_LOGGER VBOX_SVN_REV=$(VBOX_SVN_REV)
+yokedrv_INCS         := $(PATH_SUB_CURRENT)
+yokedrv_LIBS          = $(PATH_STAGE_LIB)/RuntimeR0Drv$(VBOX_SUFF_LIB)
+yokedrv_SOURCES      := \
 	$(KBUILD_TARGET)/SUPDrv-$(KBUILD_TARGET).c \
 	$(PATH_SUB_CURRENT)/$(KBUILD_TARGET)/SUPDrv-$(KBUILD_TARGET).def \
 	SUPDrv.c \
@@ -220,14 +220,14 @@ vboxdrv_SOURCES      := \
 #
 # Targets for installing the freebsd sources.
 #
-vboxdrv-mod_INST    = bin/src/vboxdrv/
-vboxdrv-mod_SOURCES = \
+yokedrv-mod_INST    = bin/src/yokedrv/
+yokedrv-mod_SOURCES = \
 	$(subst $(DQUOTE),,$(FILES_VBOXDRV_NOBIN)) \
-	$(vboxdrv-mod_0_OUTDIR)/Makefile
-vboxdrv-mod_CLEAN   = \
-	$(vboxdrv-mod_0_OUTDIR)/Makefile
+	$(yokedrv-mod_0_OUTDIR)/Makefile
+yokedrv-mod_CLEAN   = \
+	$(yokedrv-mod_0_OUTDIR)/Makefile
 
-$$(vboxdrv-mod_0_OUTDIR)/Makefile: \
+$$(yokedrv-mod_0_OUTDIR)/Makefile: \
 		$(PATH_SUB_CURRENT)/freebsd/Makefile \
 		$$(if $$(eq $$(Support/freebsd/Makefile_VBOX_HARDENED),$$(VBOX_WITH_HARDENING)),,FORCE) \
 		| $$(dir $$@)
@@ -243,93 +243,93 @@ endif # freebsd
 
 
 #
-# New VBoxDrv target. TODO: Convert all the above to use this!
+# New YokeDrv target. TODO: Convert all the above to use this!
 #
 if1of ($(KBUILD_TARGET), darwin linux solaris win)
  ifdef VBOX_WITH_VBOXDRV
-  SYSMODS += VBoxDrv
+  SYSMODS += YokeDrv
  endif
- VBoxDrv_TEMPLATE         = VBOXR0DRV
- VBoxDrv_NAME.freebsd     = vboxdrv
- VBoxDrv_NAME.linux       = vboxdrv
- VBoxDrv_NAME.solaris     = vboxdrv
+ YokeDrv_TEMPLATE         = VBOXR0DRV
+ YokeDrv_NAME.freebsd     = yokedrv
+ YokeDrv_NAME.linux       = yokedrv
+ YokeDrv_NAME.solaris     = yokedrv
  ifdef VBOX_SIGNING_MODE
-  VBoxDrv_INSTTYPE.win    = none
-  VBoxDrv_DEBUG_INSTTYPE.win = both
+  YokeDrv_INSTTYPE.win    = none
+  YokeDrv_DEBUG_INSTTYPE.win = both
  endif
- VBoxDrv_INST.darwin      = $(INST_VBOXDRV)Contents/MacOS/
- VBoxDrv_DEBUG_INST.darwin= $(patsubst %/,%,$(INST_VBOXDRV))
- VBoxDrv_SDKS.win         = ReorderCompilerIncs $(VBOX_WINDDK) $(VBOX_WINPSDK)INCS
+ YokeDrv_INST.darwin      = $(INST_VBOXDRV)Contents/MacOS/
+ YokeDrv_DEBUG_INST.darwin= $(patsubst %/,%,$(INST_VBOXDRV))
+ YokeDrv_SDKS.win         = ReorderCompilerIncs $(VBOX_WINDDK) $(VBOX_WINPSDK)INCS
 
- VBoxDrv_DEFS            := IN_RT_R0 IN_SUP_R0 SUPDRV_WITH_RELEASE_LOGGER VBOX_SVN_REV=$(VBOX_SVN_REV)
+ YokeDrv_DEFS            := IN_RT_R0 IN_SUP_R0 SUPDRV_WITH_RELEASE_LOGGER VBOX_SVN_REV=$(VBOX_SVN_REV)
  ifdef VBOX_WITH_DTRACE_R0DRV
-  VBoxDrv_DEFS           += VBOX_WITH_DTRACE VBOX_WITH_DTRACE_R0DRV
+  YokeDrv_DEFS           += VBOX_WITH_DTRACE VBOX_WITH_DTRACE_R0DRV
  endif
- #VBoxDrv_DEFS.debug      += DEBUG_DARWIN_GIP
- VBoxDrv_DEFS.darwin     := VBOX_WITH_HOST_VMX
- VBoxDrv_DEFS.linux      := \
-	KBUILD_MODNAME=KBUILD_STR\(vboxdrv\) KBUILD_BASENAME=KBUILD_STR\(vboxdrv\) MODULE CONFIG_VBOXDRV_AS_MISC
+ #YokeDrv_DEFS.debug      += DEBUG_DARWIN_GIP
+ YokeDrv_DEFS.darwin     := VBOX_WITH_HOST_VMX
+ YokeDrv_DEFS.linux      := \
+	KBUILD_MODNAME=KBUILD_STR\(yokedrv\) KBUILD_BASENAME=KBUILD_STR\(yokedrv\) MODULE CONFIG_VBOXDRV_AS_MISC
  ifdef VBOX_LINUX_VERSION_2_4
-  VBoxDrv_DEFS.linux     += EXPORT_SYMTAB
+  YokeDrv_DEFS.linux     += EXPORT_SYMTAB
  endif
  ifdef VBOX_WITH_NETFLT
-  VBoxDrv_DEFS.solaris   += VBOX_WITH_NETFLT
+  YokeDrv_DEFS.solaris   += VBOX_WITH_NETFLT
  endif
  ifdef VBOX_WITH_NATIVE_SOLARIS_LOADING
-  VBoxDrv_DEFS.solaris   += VBOX_WITH_NATIVE_SOLARIS_LOADING
+  YokeDrv_DEFS.solaris   += VBOX_WITH_NATIVE_SOLARIS_LOADING
  endif
  ifdef VBOX_WITHOUT_NATIVE_R0_LOADER
-  VBoxDrv_DEFS.win       += VBOX_WITHOUT_NATIVE_R0_LOADER
+  YokeDrv_DEFS.win       += VBOX_WITHOUT_NATIVE_R0_LOADER
  endif
  ifdef VBOX_WITH_VMMR0_DISABLE_PREEMPTION
-  VBoxDrv_DEFS.win       += VBOX_WITH_VMMR0_DISABLE_PREEMPTION
+  YokeDrv_DEFS.win       += VBOX_WITH_VMMR0_DISABLE_PREEMPTION
  endif
 
- VBoxDrv_INCS             = . $(VBoxDrv_0_OUTDIR)
- VBoxDrv_INCS.darwin      = ./darwin
- VBoxDrv_INCS.linux       = $(PATH_ROOT)/src/VBox/Runtime/r0drv/linux
+ YokeDrv_INCS             = . $(YokeDrv_0_OUTDIR)
+ YokeDrv_INCS.darwin      = ./darwin
+ YokeDrv_INCS.linux       = $(PATH_ROOT)/src/VBox/Runtime/r0drv/linux
 
- VBoxDrv_LIBS             = $(PATH_STAGE_LIB)/RuntimeR0Drv$(VBOX_SUFF_LIB)
- VBoxDrv_LIBS.linux.debug = $(VBoxDrv_LIBS) $(VBOX_GCC_LIBGCC)
- VBoxDrv_LIBS.win         = \
+ YokeDrv_LIBS             = $(PATH_STAGE_LIB)/RuntimeR0Drv$(VBOX_SUFF_LIB)
+ YokeDrv_LIBS.linux.debug = $(YokeDrv_LIBS) $(VBOX_GCC_LIBGCC)
+ YokeDrv_LIBS.win         = \
  	$(PATH_SDK_$(VBOX_WINDDK)_LIB)/ntoskrnl.lib \
  	$(PATH_SDK_$(VBOX_WINDDK)_LIB)/hal.lib \
  	$(PATH_STAGE_LIB)/RuntimeR0Drv$(VBOX_SUFF_LIB)
 
- #VBoxDrv_LDFLAGS.darwin    = -v -Wl,-whyload -Wl,-v -Wl,-whatsloaded
- VBoxDrv_LDFLAGS.solaris += -N misc/ctf
+ #YokeDrv_LDFLAGS.darwin    = -v -Wl,-whyload -Wl,-v -Wl,-whatsloaded
+ YokeDrv_LDFLAGS.solaris += -N misc/ctf
  ifdef VBOX_WITH_NATIVE_DTRACE
-  VBoxDrv_LDFLAGS.solaris += -N drv/dtrace
+  YokeDrv_LDFLAGS.solaris += -N drv/dtrace
  endif
- VBoxDrv_LDFLAGS.win.x86  = -Entry:DriverEntry@8
- VBoxDrv_LDFLAGS.win.amd64= -Entry:DriverEntry
+ YokeDrv_LDFLAGS.win.x86  = -Entry:DriverEntry@8
+ YokeDrv_LDFLAGS.win.amd64= -Entry:DriverEntry
 
- VBoxDrv_SOURCES.darwin   = \
+ YokeDrv_SOURCES.darwin   = \
 	darwin/SUPDrv-darwin.cpp
- VBoxDrv_SOURCES.linux    = \
+ YokeDrv_SOURCES.linux    = \
 	linux/SUPDrv-linux.c
- VBoxDrv_SOURCES.solaris  = \
+ YokeDrv_SOURCES.solaris  = \
 	solaris/SUPDrv-solaris.c
- VBoxDrv_SOURCES.win      = \
+ YokeDrv_SOURCES.win      = \
 	win/SUPDrv-win.cpp \
 	win/SUPDrvA-win.asm \
-	win/VBoxDrv.rc
- VBoxDrv_SOURCES          = \
+	win/YokeDrv.rc
+ YokeDrv_SOURCES          = \
  	SUPDrv.d \
  	SUPDrv.c \
  	SUPDrvSem.c \
   	SUPDrvTracer.cpp
  ifdef VBOX_WITH_NATIVE_DTRACE
-  VBoxDrv_SOURCES        += \
+  YokeDrv_SOURCES        += \
   	SUPDrv-dtrace.cpp
   SUPDrv-dtrace.cpp_DEFS.darwin += VBOX_PATH_MACOSX_DTRACE_H=\"/usr/include/sys/dtrace.h\"
  endif
  ifn1of ($(KBUILD_TARGET), linux freebsd)
-  VBoxDrv_SOURCES        += \
+  YokeDrv_SOURCES        += \
  	SUPDrvTracerA.asm
  endif
  ifndef VBOX_LINUX_VERSION_2_4
-  VBoxDrv_SOURCES.linux  += \
+  YokeDrv_SOURCES.linux  += \
  	linux/SUPDrv-linux.mod.c
  endif
 
@@ -339,15 +339,15 @@ endif
 
 if1of ($(KBUILD_TARGET), darwin)
  # Files necessary to make a darwin kernel extension bundle.
- INSTALLS.darwin += VBoxDrv.kext
- VBoxDrv.kext_INST     = $(INST_VBOXDRV)Contents/
- VBoxDrv.kext_SOURCES  = $(VBoxDrv.kext_0_OUTDIR)/Info.plist
- VBoxDrv.kext_CLEAN    = $(VBoxDrv.kext_0_OUTDIR)/Info.plist
+ INSTALLS.darwin += YokeDrv.kext
+ YokeDrv.kext_INST     = $(INST_VBOXDRV)Contents/
+ YokeDrv.kext_SOURCES  = $(YokeDrv.kext_0_OUTDIR)/Info.plist
+ YokeDrv.kext_CLEAN    = $(YokeDrv.kext_0_OUTDIR)/Info.plist
 
-$$(VBoxDrv.kext_0_OUTDIR)/Info.plist: \
+$$(YokeDrv.kext_0_OUTDIR)/Info.plist: \
 		$(PATH_SUB_CURRENT)/darwin/Info.plist \
 		$(VBOX_VERSION_MK) | $$(dir $$@)
-	$(call MSG_GENERATE,VBoxDrv,$@,$<)
+	$(call MSG_GENERATE,YokeDrv,$@,$<)
 	$(QUIET)$(RM) -f $@
 	$(QUIET)$(SED) \
 		-e 's/@VBOX_VERSION_STRING@/$(VBOX_VERSION_STRING)/g' \
@@ -375,20 +375,20 @@ if1of ($(KBUILD_TARGET), linux)
  #
  # Targets for installing the linux sources.
  #
- vboxdrv-mod_INST    = bin/src/vboxdrv/
- vboxdrv-mod_SOURCES = \
+ yokedrv-mod_INST    = bin/src/yokedrv/
+ yokedrv-mod_SOURCES = \
  	$(subst $(DQUOTE),,$(FILES_VBOXDRV_NOBIN)) \
- 	$(vboxdrv-mod_0_OUTDIR)/Makefile
- vboxdrv-mod_EXEC_SOURCES  = \
+ 	$(yokedrv-mod_0_OUTDIR)/Makefile
+ yokedrv-mod_EXEC_SOURCES  = \
  	$(subst $(DQUOTE),,$(FILES_VBOXDRV_BIN)) \
  	$(PATH_ROOT)/src/VBox/HostDrivers/linux/do_Module.symvers
- vboxdrv-mod_CLEAN   = \
- 	$(vboxdrv-mod_0_OUTDIR)/Makefile \
- 	$(PATH_TARGET)/vboxdrv-mod-1.dep \
+ yokedrv-mod_CLEAN   = \
+ 	$(yokedrv-mod_0_OUTDIR)/Makefile \
+ 	$(PATH_TARGET)/yokedrv-mod-1.dep \
 
  # Scripts needed for building the kernel modules
- includedep $(PATH_TARGET)/vboxdrv-mod-1.dep
- $$(vboxdrv-mod_0_OUTDIR)/Makefile: \
+ includedep $(PATH_TARGET)/yokedrv-mod-1.dep
+ $$(yokedrv-mod_0_OUTDIR)/Makefile: \
 		$(PATH_SUB_CURRENT)/linux/Makefile \
 		$$(if $$(eq $$(Support/linux/Makefile_VBOX_HARDENED),$$(VBOX_WITH_HARDENING)),,FORCE) \
 		| $$(dir $$@)
@@ -398,35 +398,35 @@ if1of ($(KBUILD_TARGET), linux)
  else
 	$(QUIET)$(CP) -f $< $@
  endif
-	%$(QUIET2)$(APPEND) -t '$(PATH_TARGET)/vboxdrv-mod-1.dep' 'Support/linux/Makefile_VBOX_HARDENED=$(VBOX_WITH_HARDENING)'
+	%$(QUIET2)$(APPEND) -t '$(PATH_TARGET)/yokedrv-mod-1.dep' 'Support/linux/Makefile_VBOX_HARDENED=$(VBOX_WITH_HARDENING)'
 endif # real linux
 
 
 ifeq ($(KBUILD_TARGET), win)
- INSTALLS.win += VBoxDrv-inf
- VBoxDrv-inf_INST = $(INST_BIN)
- VBoxDrv-inf_MODE = a+r,u+w
- VBoxDrv-inf_SOURCES = \
- 	$(PATH_TARGET)/VBoxDrvCat.dir/VBoxDrv.inf
- VBoxDrv-inf_CLEAN = $(VBoxDrv-inf_SOURCES)
- VBoxDrv-inf_BLDDIRS = $(PATH_TARGET)/VBoxDrvCat.dir
+ INSTALLS.win += YokeDrv-inf
+ YokeDrv-inf_INST = $(INST_BIN)
+ YokeDrv-inf_MODE = a+r,u+w
+ YokeDrv-inf_SOURCES = \
+ 	$(PATH_TARGET)/YokeDrvCat.dir/YokeDrv.inf
+ YokeDrv-inf_CLEAN = $(YokeDrv-inf_SOURCES)
+ YokeDrv-inf_BLDDIRS = $(PATH_TARGET)/YokeDrvCat.dir
 
- $(PATH_TARGET)/VBoxDrvCat.dir/VBoxDrv.inf: $(PATH_SUB_CURRENT)/win/VBoxDrv.inf $(MAKEFILE_CURRENT) | $$(dir $$@)
-	$(call MSG_GENERATE,VBoxDrv-inf,$@,$<)
+ $(PATH_TARGET)/YokeDrvCat.dir/YokeDrv.inf: $(PATH_SUB_CURRENT)/win/YokeDrv.inf $(MAKEFILE_CURRENT) | $$(dir $$@)
+	$(call MSG_GENERATE,YokeDrv-inf,$@,$<)
 	$(call VBOX_EDIT_INF_FN,$<,$@)
 
  ifdef VBOX_SIGNING_MODE
-  VBoxDrv-inf_SOURCES += \
-  	$(PATH_TARGET)/VBoxDrvCat.dir/VBoxDrv.sys \
-  	$(PATH_TARGET)/VBoxDrvCat.dir/VBoxDrv.cat
+  YokeDrv-inf_SOURCES += \
+  	$(PATH_TARGET)/YokeDrvCat.dir/YokeDrv.sys \
+  	$(PATH_TARGET)/YokeDrvCat.dir/YokeDrv.cat
 
-  $(PATH_TARGET)/VBoxDrvCat.dir/VBoxDrv.sys: $$(VBoxDrv_1_TARGET) | $$(dir $$@)
+  $(PATH_TARGET)/YokeDrvCat.dir/YokeDrv.sys: $$(YokeDrv_1_TARGET) | $$(dir $$@)
 	$(INSTALL) -m 644 $< $(@D)
 
-  $(PATH_TARGET)/VBoxDrvCat.dir/VBoxDrv.cat: \
-		$(PATH_TARGET)/VBoxDrvCat.dir/VBoxDrv.inf \
-		$(PATH_TARGET)/VBoxDrvCat.dir/VBoxDrv.sys
-	$(call MSG_TOOL,Inf2Cat,VBoxDrv-inf,$@,$<)
+  $(PATH_TARGET)/YokeDrvCat.dir/YokeDrv.cat: \
+		$(PATH_TARGET)/YokeDrvCat.dir/YokeDrv.inf \
+		$(PATH_TARGET)/YokeDrvCat.dir/YokeDrv.sys
+	$(call MSG_TOOL,Inf2Cat,YokeDrv-inf,$@,$<)
 	$(call VBOX_MAKE_CAT_FN, $(@D),$@)
  endif # signing
 endif # win

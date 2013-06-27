@@ -62,9 +62,9 @@
 *   Defined Constants And Macros                                               *
 *******************************************************************************/
 /** BSD Device name. */
-#define DEVICE_NAME     "/dev/vboxdrv"
+#define DEVICE_NAME     "/dev/yokedrv"
 /** The IOClass key of the service (see SUPDrv-darwin.cpp / Info.plist). */
-#define IOCLASS_NAME    "org_virtualbox_SupDrv"
+#define IOCLASS_NAME    "io_yoke_SupDrv"
 
 
 
@@ -118,7 +118,7 @@ static int suplibDarwinOpenDevice(PSUPLIBDATA pThis)
 
 
 /**
- * Opens the IOKit service, instantiating org_virtualbox_SupDrvClient.
+ * Opens the IOKit service, instantiating io_yoke_SupDrvClient.
  *
  * @returns VBox status code.
  */

@@ -80,7 +80,7 @@ RT_C_DECLS_END
 *******************************************************************************/
 
 /** The module name. */
-#define DEVICE_NAME    "vboxdrv"
+#define DEVICE_NAME    "yokedrv"
 
 
 
@@ -111,9 +111,9 @@ static void             vboxdrvDarwinResolveSymbols(void);
  * The service class.
  * This is just a formality really.
  */
-class org_virtualbox_SupDrv : public IOService
+class io_yoke_SupDrv : public IOService
 {
-    OSDeclareDefaultStructors(org_virtualbox_SupDrv);
+    OSDeclareDefaultStructors(io_yoke_SupDrv);
 
 public:
     virtual bool init(OSDictionary *pDictionary = 0);
@@ -124,7 +124,7 @@ public:
     virtual bool terminate(IOOptionBits fOptions);
 };
 
-OSDefineMetaClassAndStructors(org_virtualbox_SupDrv, IOService);
+OSDefineMetaClassAndStructors(io_yoke_SupDrv, IOService);
 
 
 /**
@@ -132,14 +132,14 @@ OSDefineMetaClassAndStructors(org_virtualbox_SupDrv, IOService);
  * I don't think it'll work as I cannot figure out where/what creates the correct
  * port right.
  */
-class org_virtualbox_SupDrvClient : public IOUserClient
+class io_yoke_SupDrvClient : public IOUserClient
 {
-    OSDeclareDefaultStructors(org_virtualbox_SupDrvClient);
+    OSDeclareDefaultStructors(io_yoke_SupDrvClient);
 
 private:
     PSUPDRVSESSION          m_pSession;     /**< The session. */
     task_t                  m_Task;         /**< The client task. */
-    org_virtualbox_SupDrv  *m_pProvider;    /**< The service provider. */
+    io_yoke_SupDrv  *m_pProvider;    /**< The service provider. */
 
 public:
     virtual bool initWithTask(task_t OwningTask, void *pvSecurityId, UInt32 u32Type);
@@ -152,7 +152,7 @@ public:
     virtual void stop(IOService *pProvider);
 };
 
-OSDefineMetaClassAndStructors(org_virtualbox_SupDrvClient, IOUserClient);
+OSDefineMetaClassAndStructors(io_yoke_SupDrvClient, IOUserClient);
 
 
 
@@ -398,7 +398,7 @@ static int VBoxDrvDarwinOpen(dev_t Dev, int fFlags, int fDevType, struct proc *p
 #endif
 
     /*
-     * Find the session created by org_virtualbox_SupDrvClient, fail
+     * Find the session created by io_yoke_SupDrvClient, fail
      * if no such session, and mark it as opened. We set the uid & gid
      * here too, since that is more straight forward at this point.
      */
@@ -468,9 +468,9 @@ static int VBoxDrvDarwinClose(dev_t Dev, int fFlags, int fDevType, struct proc *
     Assert(proc_pid(pProcess) == (int)RTProcSelf());
 
     /*
-     * Hand the session closing to org_virtualbox_SupDrvClient.
+     * Hand the session closing to io_yoke_SupDrvClient.
      */
-    org_virtualbox_SupDrvClient::sessionClose(RTProcSelf());
+    io_yoke_SupDrvClient::sessionClose(RTProcSelf());
     return 0;
 }
 
@@ -954,7 +954,7 @@ RTDECL(int) SUPR0Printf(const char *pszFormat, ...)
 
 /*
  *
- * org_virtualbox_SupDrv
+ * io_yoke_SupDrv
  *
  */
 
@@ -962,9 +962,9 @@ RTDECL(int) SUPR0Printf(const char *pszFormat, ...)
 /**
  * Initialize the object.
  */
-bool org_virtualbox_SupDrv::init(OSDictionary *pDictionary)
+bool io_yoke_SupDrv::init(OSDictionary *pDictionary)
 {
-    LogFlow(("org_virtualbox_SupDrv::init([%p], %p)\n", this, pDictionary));
+    LogFlow(("io_yoke_SupDrv::init([%p], %p)\n", this, pDictionary));
     if (IOService::init(pDictionary))
     {
         /* init members. */
@@ -977,7 +977,7 @@ bool org_virtualbox_SupDrv::init(OSDictionary *pDictionary)
 /**
  * Free the object.
  */
-void org_virtualbox_SupDrv::free(void)
+void io_yoke_SupDrv::free(void)
 {
     LogFlow(("IOService::free([%p])\n", this));
     IOService::free();
@@ -988,9 +988,9 @@ void org_virtualbox_SupDrv::free(void)
  * Check if it's ok to start this service.
  * It's always ok by us, so it's up to IOService to decide really.
  */
-IOService *org_virtualbox_SupDrv::probe(IOService *pProvider, SInt32 *pi32Score)
+IOService *io_yoke_SupDrv::probe(IOService *pProvider, SInt32 *pi32Score)
 {
-    LogFlow(("org_virtualbox_SupDrv::probe([%p])\n", this));
+    LogFlow(("io_yoke_SupDrv::probe([%p])\n", this));
     return IOService::probe(pProvider, pi32Score);
 }
 
@@ -998,9 +998,9 @@ IOService *org_virtualbox_SupDrv::probe(IOService *pProvider, SInt32 *pi32Score)
 /**
  * Start this service.
  */
-bool org_virtualbox_SupDrv::start(IOService *pProvider)
+bool io_yoke_SupDrv::start(IOService *pProvider)
 {
-    LogFlow(("org_virtualbox_SupDrv::start([%p])\n", this));
+    LogFlow(("io_yoke_SupDrv::start([%p])\n", this));
 
     if (IOService::start(pProvider))
     {
@@ -1015,9 +1015,9 @@ bool org_virtualbox_SupDrv::start(IOService *pProvider)
 /**
  * Stop this service.
  */
-void org_virtualbox_SupDrv::stop(IOService *pProvider)
+void io_yoke_SupDrv::stop(IOService *pProvider)
 {
-    LogFlow(("org_virtualbox_SupDrv::stop([%p], %p)\n", this, pProvider));
+    LogFlow(("io_yoke_SupDrv::stop([%p], %p)\n", this, pProvider));
     IOService::stop(pProvider);
 }
 
@@ -1028,24 +1028,24 @@ void org_virtualbox_SupDrv::stop(IOService *pProvider)
  * @return  true if we're ok with shutting down now, false if we're not.
  * @param   fOptions        Flags.
  */
-bool org_virtualbox_SupDrv::terminate(IOOptionBits fOptions)
+bool io_yoke_SupDrv::terminate(IOOptionBits fOptions)
 {
     bool fRc;
-    LogFlow(("org_virtualbox_SupDrv::terminate: reference_count=%d g_cSessions=%d (fOptions=%#x)\n",
+    LogFlow(("io_yoke_SupDrv::terminate: reference_count=%d g_cSessions=%d (fOptions=%#x)\n",
              KMOD_INFO_NAME.reference_count, ASMAtomicUoReadS32(&g_cSessions), fOptions));
     if (    KMOD_INFO_NAME.reference_count != 0
         ||  ASMAtomicUoReadS32(&g_cSessions))
         fRc = false;
     else
         fRc = IOService::terminate(fOptions);
-    LogFlow(("org_virtualbox_SupDrv::terminate: returns %d\n", fRc));
+    LogFlow(("io_yoke_SupDrv::terminate: returns %d\n", fRc));
     return fRc;
 }
 
 
 /*
  *
- * org_virtualbox_SupDrvClient
+ * io_yoke_SupDrvClient
  *
  */
 
@@ -1053,9 +1053,9 @@ bool org_virtualbox_SupDrv::terminate(IOOptionBits fOptions)
 /**
  * Initializer called when the client opens the service.
  */
-bool org_virtualbox_SupDrvClient::initWithTask(task_t OwningTask, void *pvSecurityId, UInt32 u32Type)
+bool io_yoke_SupDrvClient::initWithTask(task_t OwningTask, void *pvSecurityId, UInt32 u32Type)
 {
-    LogFlow(("org_virtualbox_SupDrvClient::initWithTask([%p], %#x, %p, %#x) (cur pid=%d proc=%p)\n",
+    LogFlow(("io_yoke_SupDrvClient::initWithTask([%p], %#x, %p, %#x) (cur pid=%d proc=%p)\n",
              this, OwningTask, pvSecurityId, u32Type, RTProcSelf(), RTR0ProcHandleSelf()));
     AssertMsg((RTR0PROCESS)OwningTask == RTR0ProcHandleSelf(), ("%p %p\n", OwningTask, RTR0ProcHandleSelf()));
 
@@ -1075,9 +1075,9 @@ bool org_virtualbox_SupDrvClient::initWithTask(task_t OwningTask, void *pvSecuri
 /**
  * Start the client service.
  */
-bool org_virtualbox_SupDrvClient::start(IOService *pProvider)
+bool io_yoke_SupDrvClient::start(IOService *pProvider)
 {
-    LogFlow(("org_virtualbox_SupDrvClient::start([%p], %p) (cur pid=%d proc=%p)\n",
+    LogFlow(("io_yoke_SupDrvClient::start([%p], %p) (cur pid=%d proc=%p)\n",
              this, pProvider, RTProcSelf(), RTR0ProcHandleSelf() ));
     AssertMsgReturn((RTR0PROCESS)m_Task == RTR0ProcHandleSelf(),
                     ("%p %p\n", m_Task, RTR0ProcHandleSelf()),
@@ -1085,7 +1085,7 @@ bool org_virtualbox_SupDrvClient::start(IOService *pProvider)
 
     if (IOUserClient::start(pProvider))
     {
-        m_pProvider = OSDynamicCast(org_virtualbox_SupDrv, pProvider);
+        m_pProvider = OSDynamicCast(io_yoke_SupDrv, pProvider);
         if (m_pProvider)
         {
             Assert(!m_pSession);
@@ -1126,19 +1126,19 @@ bool org_virtualbox_SupDrvClient::start(IOService *pProvider)
                 RTSpinlockReleaseNoInts(g_Spinlock);
                 if (RT_SUCCESS(rc))
                 {
-                    Log(("org_virtualbox_SupDrvClient::start: created session %p for pid %d\n", m_pSession, (int)RTProcSelf()));
+                    Log(("io_yoke_SupDrvClient::start: created session %p for pid %d\n", m_pSession, (int)RTProcSelf()));
                     return true;
                 }
 
-                LogFlow(("org_virtualbox_SupDrvClient::start: already got a session for this process (%p)\n", pCur));
+                LogFlow(("io_yoke_SupDrvClient::start: already got a session for this process (%p)\n", pCur));
                 supdrvCloseSession(&g_DevExt, m_pSession);
             }
 
             m_pSession = NULL;
-            LogFlow(("org_virtualbox_SupDrvClient::start: rc=%Rrc from supdrvCreateSession\n", rc));
+            LogFlow(("io_yoke_SupDrvClient::start: rc=%Rrc from supdrvCreateSession\n", rc));
         }
         else
-            LogFlow(("org_virtualbox_SupDrvClient::start: %p isn't org_virtualbox_SupDrv\n", pProvider));
+            LogFlow(("io_yoke_SupDrvClient::start: %p isn't io_yoke_SupDrv\n", pProvider));
     }
     return false;
 }
@@ -1149,7 +1149,7 @@ bool org_virtualbox_SupDrvClient::start(IOService *pProvider)
  *
  * It will
  */
-/* static */ void org_virtualbox_SupDrvClient::sessionClose(RTPROCESS Process)
+/* static */ void io_yoke_SupDrvClient::sessionClose(RTPROCESS Process)
 {
     /*
      * Look for the session.
@@ -1195,7 +1195,7 @@ bool org_virtualbox_SupDrvClient::start(IOService *pProvider)
     /*
      * Remove it from the client object.
      */
-    org_virtualbox_SupDrvClient *pThis = (org_virtualbox_SupDrvClient *)pSession->pvSupDrvClient;
+    io_yoke_SupDrvClient *pThis = (io_yoke_SupDrvClient *)pSession->pvSupDrvClient;
     pSession->pvSupDrvClient = NULL;
     if (pThis)
     {
@@ -1213,9 +1213,9 @@ bool org_virtualbox_SupDrvClient::start(IOService *pProvider)
 /**
  * Client exits normally.
  */
-IOReturn org_virtualbox_SupDrvClient::clientClose(void)
+IOReturn io_yoke_SupDrvClient::clientClose(void)
 {
-    LogFlow(("org_virtualbox_SupDrvClient::clientClose([%p]) (cur pid=%d proc=%p)\n", this, RTProcSelf(), RTR0ProcHandleSelf()));
+    LogFlow(("io_yoke_SupDrvClient::clientClose([%p]) (cur pid=%d proc=%p)\n", this, RTProcSelf(), RTR0ProcHandleSelf()));
     AssertMsg((RTR0PROCESS)m_Task == RTR0ProcHandleSelf(), ("%p %p\n", m_Task, RTR0ProcHandleSelf()));
 
     /*
@@ -1240,9 +1240,9 @@ IOReturn org_virtualbox_SupDrvClient::clientClose(void)
 /**
  * The client exits abnormally / forgets to do cleanups. (logging)
  */
-IOReturn org_virtualbox_SupDrvClient::clientDied(void)
+IOReturn io_yoke_SupDrvClient::clientDied(void)
 {
-    LogFlow(("org_virtualbox_SupDrvClient::clientDied([%p]) m_Task=%p R0Process=%p Process=%d\n",
+    LogFlow(("io_yoke_SupDrvClient::clientDied([%p]) m_Task=%p R0Process=%p Process=%d\n",
              this, m_Task, RTR0ProcHandleSelf(), RTProcSelf()));
 
     /* IOUserClient::clientDied() calls clientClose, so we'll just do the work there. */
@@ -1253,9 +1253,9 @@ IOReturn org_virtualbox_SupDrvClient::clientDied(void)
 /**
  * Terminate the service (initiate the destruction). (logging)
  */
-bool org_virtualbox_SupDrvClient::terminate(IOOptionBits fOptions)
+bool io_yoke_SupDrvClient::terminate(IOOptionBits fOptions)
 {
-    LogFlow(("org_virtualbox_SupDrvClient::terminate([%p], %#x)\n", this, fOptions));
+    LogFlow(("io_yoke_SupDrvClient::terminate([%p], %#x)\n", this, fOptions));
     return IOUserClient::terminate(fOptions);
 }
 
@@ -1263,9 +1263,9 @@ bool org_virtualbox_SupDrvClient::terminate(IOOptionBits fOptions)
 /**
  * The final stage of the client service destruction. (logging)
  */
-bool org_virtualbox_SupDrvClient::finalize(IOOptionBits fOptions)
+bool io_yoke_SupDrvClient::finalize(IOOptionBits fOptions)
 {
-    LogFlow(("org_virtualbox_SupDrvClient::finalize([%p], %#x)\n", this, fOptions));
+    LogFlow(("io_yoke_SupDrvClient::finalize([%p], %#x)\n", this, fOptions));
     return IOUserClient::finalize(fOptions);
 }
 
@@ -1273,9 +1273,9 @@ bool org_virtualbox_SupDrvClient::finalize(IOOptionBits fOptions)
 /**
  * Stop the client service. (logging)
  */
-void org_virtualbox_SupDrvClient::stop(IOService *pProvider)
+void io_yoke_SupDrvClient::stop(IOService *pProvider)
 {
-    LogFlow(("org_virtualbox_SupDrvClient::stop([%p])\n", this));
+    LogFlow(("io_yoke_SupDrvClient::stop([%p])\n", this));
     IOUserClient::stop(pProvider);
 }
 
