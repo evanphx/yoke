@@ -1,0 +1,5 @@
+.tmp_out.dSYM/
+AutoConfig.kmk
+configure.log
+env.sh
+out/
