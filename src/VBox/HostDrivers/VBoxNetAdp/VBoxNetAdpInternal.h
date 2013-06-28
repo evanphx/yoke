@@ -31,7 +31,7 @@ typedef struct VBOXNETADPGLOBALS *PVBOXNETADPGLOBALS;
 
 #define VBOXNETADP_MAX_INSTANCES   128
 #define VBOXNETADP_MAX_UNITS       128
-#define VBOXNETADP_NAME            "vboxnet"
+#define VBOXNETADP_NAME            "yokenet"
 #define VBOXNETADP_MAX_NAME_LEN    32
 #define VBOXNETADP_MTU             1500
 #if defined(RT_OS_DARWIN)
@@ -39,7 +39,7 @@ typedef struct VBOXNETADPGLOBALS *PVBOXNETADPGLOBALS;
 # define VBOXNETADP_DETACH_TIMEOUT 500
 #endif
 
-#define VBOXNETADP_CTL_DEV_NAME    "vboxnetctl"
+#define VBOXNETADP_CTL_DEV_NAME    "yokenetctl"
 #define VBOXNETADP_CTL_ADD   _IOWR('v', 1, VBOXNETADPREQ)
 #define VBOXNETADP_CTL_REMOVE _IOW('v', 2, VBOXNETADPREQ)
 

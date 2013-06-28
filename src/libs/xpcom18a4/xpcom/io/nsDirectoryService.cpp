@@ -44,11 +44,11 @@
 #include "nsStaticAtom.h"
 
 #if defined(XP_MAC)
-#include <Folders.h>
-#include <Files.h>
-#include <Memory.h>
-#include <Processes.h>
-#include <Gestalt.h>
+#include <CoreCarbon/Folders.h>
+#include <CoreCarbon/Files.h>
+#include <CoreCarbon/Memory.h>
+#include <CoreCarbon/Processes.h>
+#include <CoreCarbon/Gestalt.h>
 #elif defined(XP_WIN)
 #include <windows.h>
 #include <shlobj.h>
@@ -62,13 +62,15 @@
 #include "prenv.h"
 #ifdef XP_MACOSX
 #include <CoreServices/CoreServices.h>
-#include <Folders.h>
-#include <Files.h>
-#include <Memory.h>
-#include <Processes.h>
-#include <Gestalt.h>
-#include <CFURL.h>
-#include <InternetConfig.h>
+
+// #include <CoreServices/CarbonCore/Folders.h>
+// #include <CoreServices/CarbonCore/Files.h>
+// #include <CoreServices/CarbonCore/Memory.h>
+// #include <CoreServices/CarbonCore/Processes.h>
+// #include <CoreServices/CarbonCore/Gestalt.h>
+// #include <CoreServices/CarbonCore/CFURL.h>
+// #include <HIServices.h> // /InternetConfig.h>
+#include <ApplicationServices/ApplicationServices.h>
 #endif
 #elif defined(XP_OS2)
 #define MAX_PATH _MAX_PATH

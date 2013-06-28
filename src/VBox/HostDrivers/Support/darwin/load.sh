@@ -26,8 +26,8 @@
 #
 
 XNU_VERSION=`LC_ALL=C uname -r | LC_ALL=C cut -d . -f 1`
-DRVNAME="VBoxDrv.kext"
-BUNDLE="org.virtualbox.kext.VBoxDrv"
+DRVNAME="YokeDrv.kext"
+BUNDLE="io.yoke.kext.YokeDrv"
 
 DIR=`dirname "$0"`
 DIR=`cd "$DIR" && pwd`
@@ -42,43 +42,43 @@ else
   OPTS="-t"
 fi
 
-# Make sure VBoxUSB is unloaded as it might be using symbols from us.
-LOADED=`kextstat -b org.virtualbox.kext.VBoxUSB -l`
+# Make sure YokeUSB is unloaded as it might be using symbols from us.
+LOADED=`kextstat -b io.yoke.kext.YokeUSB -l`
 if test -n "$LOADED"; then
-    echo "load.sh: Unloading org.virtualbox.kext.VBoxUSB..."
-    sudo kextunload -v 6 -b org.virtualbox.kext.VBoxUSB
-    LOADED=`kextstat -b org.virtualbox.kext.VBoxUSB -l`
+    echo "load.sh: Unloading io.yoke.kext.YokeUSB..."
+    sudo kextunload -v 6 -b io.yoke.kext.YokeUSB
+    LOADED=`kextstat -b io.yoke.kext.YokeUSB -l`
     if test -n "$LOADED"; then
-        echo "load.sh: failed to unload org.virtualbox.kext.VBoxUSB, see above..."
+        echo "load.sh: failed to unload io.yoke.kext.YokeUSB, see above..."
         exit 1;
     fi
-    echo "load.sh: Successfully unloaded org.virtualbox.kext.VBoxUSB"
+    echo "load.sh: Successfully unloaded io.yoke.kext.YokeUSB"
 fi
 
-# Make sure VBoxNetFlt is unloaded as it might be using symbols from us.
-LOADED=`kextstat -b org.virtualbox.kext.VBoxNetFlt -l`
+# Make sure YokeNetFlt is unloaded as it might be using symbols from us.
+LOADED=`kextstat -b io.yoke.kext.YokeNetFlt -l`
 if test -n "$LOADED"; then
-    echo "load.sh: Unloading org.virtualbox.kext.VBoxNetFlt..."
-    sudo kextunload -v 6 -b org.virtualbox.kext.VBoxNetFlt
-    LOADED=`kextstat -b org.virtualbox.kext.VBoxNetFlt -l`
+    echo "load.sh: Unloading io.yoke.kext.YokeNetFlt..."
+    sudo kextunload -v 6 -b io.yoke.kext.YokeNetFlt
+    LOADED=`kextstat -b io.yoke.kext.YokeNetFlt -l`
     if test -n "$LOADED"; then
-        echo "load.sh: failed to unload org.virtualbox.kext.VBoxNetFlt, see above..."
+        echo "load.sh: failed to unload io.yoke.kext.YokeNetFlt, see above..."
         exit 1;
     fi
-    echo "load.sh: Successfully unloaded org.virtualbox.kext.VBoxNetFlt"
+    echo "load.sh: Successfully unloaded io.yoke.kext.YokeNetFlt"
 fi
 
-# Make sure VBoxNetAdp is unloaded as it might be using symbols from us.
-LOADED=`kextstat -b org.virtualbox.kext.VBoxNetAdp -l`
+# Make sure YokeNetAdp is unloaded as it might be using symbols from us.
+LOADED=`kextstat -b io.yoke.kext.YokeNetAdp -l`
 if test -n "$LOADED"; then
-    echo "load.sh: Unloading org.virtualbox.kext.VBoxNetAdp..."
-    sudo kextunload -v 6 -b org.virtualbox.kext.VBoxNetAdp
-    LOADED=`kextstat -b org.virtualbox.kext.VBoxNetAdp -l`
+    echo "load.sh: Unloading io.yoke.kext.YokeNetAdp..."
+    sudo kextunload -v 6 -b io.yoke.kext.YokeNetAdp
+    LOADED=`kextstat -b io.yoke.kext.YokeNetAdp -l`
     if test -n "$LOADED"; then
-        echo "load.sh: failed to unload org.virtualbox.kext.VBoxNetAdp, see above..."
+        echo "load.sh: failed to unload io.yoke.kext.YokeNetAdp, see above..."
         exit 1;
     fi
-    echo "load.sh: Successfully unloaded org.virtualbox.kext.VBoxNetAdp"
+    echo "load.sh: Successfully unloaded io.yoke.kext.YokeNetAdp"
 fi
 
 # Try unload any existing instance first.
@@ -146,7 +146,7 @@ fi
 sync
 sudo chown -R `whoami` "$DIR"
 #sudo chmod 666 /dev/vboxdrv
-kextstat | grep org.virtualbox.kext
+kextstat | grep io.yoke.kext
 if [ -n "${VBOX_DARWIN_SYMS}"  -a   "$XNU_VERSION" -ge "10" ]; then
     dsymutil -o "${VBOX_DARWIN_SYMS}/${DRVNAME}.dSYM" "${DIR}/Contents/MacOS/`basename -s .kext ${DRVNAME}`"
     sync

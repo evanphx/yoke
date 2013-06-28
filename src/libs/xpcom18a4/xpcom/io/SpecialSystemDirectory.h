@@ -45,7 +45,8 @@
 #include "nsILocalFile.h"
 
 #if defined(XP_MAC) || defined(XP_MACOSX)
-#include <Types.h>
+#include <CoreServices/CoreServices.h>
+// #include <CoreServices/CarbonCore/MacTypes.h>
 #include "nsILocalFileMac.h"
 #include "prenv.h"
 #endif

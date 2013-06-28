@@ -18,11 +18,11 @@
 SCRIPT_NAME="loadnetflt"
 XNU_VERSION=`LC_ALL=C uname -r | LC_ALL=C cut -d . -f 1`
 
-DRVNAME="VBoxNetFlt.kext"
-BUNDLE="org.virtualbox.kext.VBoxNetFlt"
+DRVNAME="YokeNetFlt.kext"
+BUNDLE="io.yoke.kext.YokeNetFlt"
 
-DEP_DRVNAME="VBoxDrv.kext"
-DEP_BUNDLE="org.virtualbox.kext.VBoxDrv"
+DEP_DRVNAME="YokeDrv.kext"
+DEP_BUNDLE="io.yoke.kext.YokeDrv"
 
 
 DIR=`dirname "$0"`
@@ -110,5 +110,5 @@ sudo kextload $OPTS -d "$DEP_DIR" "$DIR"
 fi
 sync
 sudo chown -R `whoami` "$DIR" "$DEP_DIR"
-kextstat | grep org.virtualbox.kext
+kextstat | grep io.yoke.kext
 

@@ -59,8 +59,9 @@
 #include <stdio.h>
 #include "prenv.h"
 #elif defined(XP_MACOSX)
-#include <Processes.h>
-#include <CFBundle.h>
+#include <CoreFoundation/CoreFoundation.h>
+// #include <Processes.h>
+// #include <CFBundle.h>
 #elif defined(XP_UNIX)
 #include <unistd.h>
 #include <stdlib.h>

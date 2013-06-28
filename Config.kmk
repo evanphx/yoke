@@ -490,7 +490,7 @@ VBOX_WITH_USB_VIDEO = 1
 ## @name Other Component
 ## @{
 # Build the installer.
-VBOX_WITH_INSTALLER = 1
+# VBOX_WITH_INSTALLER = 1
 # The kernel driver/module and related runtime libraries.
 VBOX_WITH_VBOXDRV = 1
 # The main api.
@@ -503,18 +503,18 @@ if1of ($(KBUILD_TARGET), linux solaris)
  VBOX_WITH_XPCOM_NAMESPACE_CLEANUP = 1
 endif
 # Set this to not use COM or XPCOM in places where it can be avoided.
-#VBOX_WITHOUT_COM = 1
+VBOX_WITHOUT_COM = 1
 # The webservices api.
 VBOX_WITH_WEBSERVICES = 1
 VBOX_WITH_WEBSERVICES_SSL = 1
 # The Qt 4 GUI.
-VBOX_WITH_QTGUI = 1
+# VBOX_WITH_QTGUI = 1
 # Indicates the Qt is Cocoa based on the Mac.
 ifeq ($(KBUILD_TARGET),darwin)
  # VBOX_WITH_COCOA_QT = 0
 endif
 # The SDL based GUI.
-VBOX_WITH_VBOXSDL = 0
+# VBOX_WITH_VBOXSDL = 0
 # Build VBoxSDL with secure label support.
 ifeq ($(filter win.amd64,$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)),) # too much work with freetype and all that.
 VBOX_WITH_SECURELABEL = 1
@@ -556,9 +556,9 @@ VBOX_WITH_MULTIVERSION_PYTHON ?= 1
 # Enable the kchmviewer.
 VBOX_WITH_KCHMVIEWER = 1
 # Build the testsuite.
-VBOX_WITH_TESTSUITE = 1
+# VBOX_WITH_TESTSUITE = 1
 # Build the testcases.
-VBOX_WITH_TESTCASES = 1
+# VBOX_WITH_TESTCASES = 1
 # Enable this to build vditool even if VBOX_WITH_TESTCASES is disabled
 VBOX_WITH_VDITOOL =
 # Enable this to build vbox-img even if VBOX_WITH_TESTCASES is disabled
@@ -643,9 +643,9 @@ VBOX_WITH_EXTPACK_PUEL_BUILD = 1
 ## @name Misc
 ## @{
 # Enable Seamless mode
-VBOX_X11_SEAMLESS_GUEST = 1
+# VBOX_X11_SEAMLESS_GUEST = 1
 # Enables all the doxgen bits.
-VBOX_WITH_ALL_DOXYGEN_TARGETS = 1
+# VBOX_WITH_ALL_DOXYGEN_TARGETS = 1
 # Set this to skip installing the redistributable compiler runtime.
 #VBOX_WITHOUT_COMPILER_REDIST = 1
 # Enables VMMR0.r0 (++) loading using the native loader on solaris.
