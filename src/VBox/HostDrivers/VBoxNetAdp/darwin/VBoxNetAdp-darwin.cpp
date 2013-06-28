@@ -68,7 +68,7 @@ extern "C" {
  * Used to prevent stack overflow and similar bad stuff. */
 #define VBOXNETADP_DARWIN_MAX_SEGS       32
 #define VBOXNETADP_DARWIN_MAX_FAMILIES   4
-#define VBOXNETADP_DARWIN_NAME           "vboxnet"
+#define VBOXNETADP_DARWIN_NAME           "yokenet"
 #define VBOXNETADP_DARWIN_MTU            1500
 #define VBOXNETADP_DARWIN_DETACH_TIMEOUT 500
 
@@ -135,7 +135,7 @@ static void vboxNetAdpDarwinComposeUUID(PVBOXNETADP pThis, PRTUUID pUuid)
 {
     /* Generate UUID from name and MAC address. */
     RTUuidClear(pUuid);
-    memcpy(pUuid->au8, "vboxnet", 7);
+    memcpy(pUuid->au8, "yokenet", 7);
     pUuid->Gen.u8ClockSeqHiAndReserved = (pUuid->Gen.u8ClockSeqHiAndReserved & 0x3f) | 0x80;
     pUuid->Gen.u16TimeHiAndVersion = (pUuid->Gen.u16TimeHiAndVersion & 0x0fff) | 0x4000;
     pUuid->Gen.u8ClockSeqLow = pThis->iUnit;
@@ -148,7 +148,7 @@ static errno_t vboxNetAdpDarwinOutput(ifnet_t pIface, mbuf_t pMBuf)
     Assert(pThis);
     if (pThis->u.s.nTapMode & BPF_MODE_OUTPUT)
     {
-        Log2(("vboxnetadp: out len=%d\n%.*Rhxd\n", mbuf_len(pMBuf), 14, mbuf_data(pMBuf)));
+        Log2(("yokenetadp: out len=%d\n%.*Rhxd\n", mbuf_len(pMBuf), 14, mbuf_data(pMBuf)));
         bpf_tap_out(pIface, DLT_EN10MB, pMBuf, NULL, 0);
     }
     mbuf_freem_list(pMBuf);
@@ -210,7 +210,7 @@ static errno_t vboxNetAdpDarwinDemux(ifnet_t pIface, mbuf_t pMBuf,
     Log2(("vboxNetAdpDarwinDemux: mode=%d\n", pThis->u.s.nTapMode));
     if (pThis->u.s.nTapMode & BPF_MODE_INPUT)
     {
-        Log2(("vboxnetadp: in len=%d\n%.*Rhxd\n", mbuf_len(pMBuf), 14, pFrameHeader));
+        Log2(("yokenetadp: in len=%d\n%.*Rhxd\n", mbuf_len(pMBuf), 14, pFrameHeader));
         bpf_tap_in(pIface, DLT_EN10MB, pMBuf, pFrameHeader, ETHER_HDR_LEN);
     }
     return ether_demux(pIface, pMBuf, pFrameHeader, pProtocolFamily);
@@ -227,7 +227,7 @@ static errno_t vboxNetAdpDarwinBpfTap(ifnet_t pIface, u_int32_t uLinkType, bpf_t
 
 static errno_t vboxNetAdpDarwinBpfSend(ifnet_t pIface, u_int32_t uLinkType, mbuf_t pMBuf)
 {
-    LogRel(("vboxnetadp: BPF send function is not implemented (dlt=%d)\n", uLinkType));
+    LogRel(("yokenetadp: BPF send function is not implemented (dlt=%d)\n", uLinkType));
     mbuf_freem_list(pMBuf);
     return 0;
 }
@@ -288,7 +288,7 @@ int vboxNetAdpOsCreate(PVBOXNETADP pThis, PCRTMAC pMACAddress)
                       vboxNetAdpDarwinBpfSend, vboxNetAdpDarwinBpfTap);
             if (err)
             {
-                LogRel(("vboxnetadp: bpf_attach failed with %d\n", err));
+                LogRel(("yokenetadp: bpf_attach failed with %d\n", err));
             }
             err = ifnet_set_flags(pThis->u.s.pIface, IFF_RUNNING | IFF_BROADCAST | IFF_SIMPLEX | IFF_MULTICAST, 0xFFFF);
             if (!err)
@@ -350,7 +350,7 @@ void vboxNetAdpOsDestroy(PVBOXNETADP pThis)
 }
 
 /**
- * Device open. Called on open /dev/vboxnetctl
+ * Device open. Called on open /dev/yokenetctl
  *
  * @param   pInode      Pointer to inode info structure.
  * @param   pFilp       Associated file pointer.
