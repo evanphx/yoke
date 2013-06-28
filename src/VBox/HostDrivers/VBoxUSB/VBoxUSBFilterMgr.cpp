@@ -122,7 +122,7 @@ static VBOXUSBFILTERLIST    g_aLists[USBFILTERTYPE_END];
 int VBoxUSBFilterInit(void)
 {
 #ifdef VBOXUSBFILTERMGR_USB_SPINLOCK
-    int rc = RTSpinlockCreate(&g_Spinlock, RTSPINLOCK_FLAGS_INTERRUPT_SAFE, "VBoxUSBFilter");
+    int rc = RTSpinlockCreate(&g_Spinlock, RTSPINLOCK_FLAGS_INTERRUPT_SAFE, "YokeUSBFilter");
 #else
     int rc = RTSemFastMutexCreate(&g_Mtx);
 #endif

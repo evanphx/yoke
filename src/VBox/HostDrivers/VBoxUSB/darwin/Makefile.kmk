@@ -1,6 +1,6 @@
 # $Id: Makefile.kmk $
 ## @file
-# Sub-Makefile for the Darwin VBoxUSB kernel extension.
+# Sub-Makefile for the Darwin YokeUSB kernel extension.
 #
 
 #
@@ -19,30 +19,30 @@ SUB_DEPTH = ../../../../..
 include $(KBUILD_PATH)/subheader.kmk
 
 #
-# VBoxUSB.kext - The Darwin Kernel Extension.
+# YokeUSB.kext - The Darwin Kernel Extension.
 #
 
 # Leopard (x86) and Snow Leopard (x86/amd64)
-SYSMODS.darwin       += VBoxUSB
-VBoxUSB_TEMPLATE      = VBOXR0DRV
-VBoxUSB_INST          = $(INST_VBOXUSB)Contents/MacOS/
-VBoxUSB_DEBUG_INST.darwin = $(patsubst %/,%,$(INST_VBOXUSB))
-VBoxUSB_INCS          = \
+SYSMODS.darwin       += YokeUSB
+YokeUSB_TEMPLATE      = VBOXR0DRV
+YokeUSB_INST          = $(INST_VBOXUSB)Contents/MacOS/
+YokeUSB_DEBUG_INST.darwin = $(patsubst %/,%,$(INST_VBOXUSB))
+YokeUSB_INCS          = \
 	. \
 	..
-#VBoxUSB_LDFLAGS       = -v -Wl,-whyload -Wl,-v -Wl,-whatsloaded
-VBoxUSB_SOURCES      := \
+#YokeUSB_LDFLAGS       = -v -Wl,-whyload -Wl,-v -Wl,-whatsloaded
+YokeUSB_SOURCES      := \
 	VBoxUSB.cpp \
 	../USBFilter.cpp \
 	../VBoxUSBFilterMgr.cpp
 
-INSTALLS += VBoxUSB.kext
-VBoxUSB.kext_INST     = $(INST_VBOXUSB)Contents/
-VBoxUSB.kext_SOURCES  =	$(VBoxUSB.kext_0_OUTDIR)/Info.plist
-VBoxUSB.kext_CLEAN    = $(VBoxUSB.kext_0_OUTDIR)/Info.plist
+INSTALLS += YokeUSB.kext
+YokeUSB.kext_INST     = $(INST_VBOXUSB)Contents/
+YokeUSB.kext_SOURCES  =	$(YokeUSB.kext_0_OUTDIR)/Info.plist
+YokeUSB.kext_CLEAN    = $(YokeUSB.kext_0_OUTDIR)/Info.plist
 
-$$(VBoxUSB.kext_0_OUTDIR)/Info.plist: $(PATH_SUB_CURRENT)/Info.plist $(VBOX_VERSION_MK) | $$(dir $$@)
-	$(call MSG_GENERATE,VBoxUSB,$@,$<)
+$$(YokeUSB.kext_0_OUTDIR)/Info.plist: $(PATH_SUB_CURRENT)/Info.plist $(VBOX_VERSION_MK) | $$(dir $$@)
+	$(call MSG_GENERATE,YokeUSB,$@,$<)
 	$(QUIET)$(RM) -f $@
 	$(QUIET)$(SED) \
 		-e 's/@VBOX_VERSION_STRING@/$(VBOX_VERSION_STRING)/g' \

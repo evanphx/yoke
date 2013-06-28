@@ -2,10 +2,10 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleDevelopmentRegion</key>        <string>English</string>
-    <key>CFBundleExecutable</key>               <string>VBoxUSB</string>
-    <key>CFBundleIdentifier</key>               <string>org.virtualbox.kext.VBoxUSB</string>
+    <key>CFBundleExecutable</key>               <string>YokeUSB</string>
+    <key>CFBundleIdentifier</key>               <string>io.yoke.kext.YokeUSB</string>
     <key>CFBundleInfoDictionaryVersion</key>    <string>6.0</string>
-    <key>CFBundleName</key>                     <string>VBoxUSB</string>
+    <key>CFBundleName</key>                     <string>YokeUSB</string>
     <key>CFBundlePackageType</key>              <string>KEXT</string>
     <key>CFBundleSignature</key>                <string>????</string>
     <key>CFBundleVersion</key>                  <string>@VBOX_VERSION_MAJOR@.@VBOX_VERSION_MINOR@.@VBOX_VERSION_BUILD@</string>
@@ -13,19 +13,19 @@
     <key>CFBundleGetInfoString</key>            <string>@VBOX_PRODUCT@ @VBOX_VERSION_STRING@, © 2007-@VBOX_C_YEAR@ @VBOX_VENDOR@</string>
     <key>IOKitPersonalities</key>
     <dict>
-        <key>VBoxUSB</key>
+        <key>YokeUSB</key>
         <dict>
-            <key>CFBundleIdentifier</key>       <string>org.virtualbox.kext.VBoxUSB</string>
-            <key>IOClass</key>                  <string>org_virtualbox_VBoxUSB</string>
-            <key>IOMatchCategory</key>          <string>org_virtualbox_VBoxUSB</string>
+            <key>CFBundleIdentifier</key>       <string>io.yoke.kext.YokeUSB</string>
+            <key>IOClass</key>                  <string>io_yoke_YokeUSB</string>
+            <key>IOMatchCategory</key>          <string>io_yoke_YokeUSB</string>
             <key>IOProviderClass</key>          <string>IOResources</string>
             <key>IOResourceMatch</key>          <string>IOKit</string>
-            <key>IOUserClientClass</key>        <string>org_virtualbox_VBoxUSBClient</string>
+            <key>IOUserClientClass</key>        <string>io_yoke_YokeUSBClient</string>
         </dict>
-        <key>VBoxUSBDevice</key>
+        <key>YokeUSBDevice</key>
         <dict>
-            <key>CFBundleIdentifier</key>       <string>org.virtualbox.kext.VBoxUSB</string>
-            <key>IOClass</key>                  <string>org_virtualbox_VBoxUSBDevice</string>
+            <key>CFBundleIdentifier</key>       <string>io.yoke.kext.YokeUSB</string>
+            <key>IOClass</key>                  <string>io_yoke_YokeUSBDevice</string>
             <key>IOProviderClass</key>          <string>IOUSBDevice</string>
             <key>idVendor</key>                 <string>*</string>
             <key>idProduct</key>                <string>*</string>
@@ -40,10 +40,10 @@
                 <key>IOUserClientClass</key>    <string>IOUSBDeviceUserClientV2</string>
             </dict>
         </dict>
-        <key>VBoxUSBInterface</key>
+        <key>YokeUSBInterface</key>
         <dict>
-            <key>CFBundleIdentifier</key>       <string>org.virtualbox.kext.VBoxUSB</string>
-            <key>IOClass</key>                  <string>org_virtualbox_VBoxUSBInterface</string>
+            <key>CFBundleIdentifier</key>       <string>io.yoke.kext.YokeUSB</string>
+            <key>IOClass</key>                  <string>io_yoke_YokeUSBInterface</string>
             <key>IOProviderClass</key>          <string>IOUSBInterface</string>
             <key>idVendor</key>                 <string>*</string>
             <key>idProduct</key>                <string>*</string>
@@ -70,7 +70,7 @@
         <key>com.apple.kpi.mach</key>           <string>9.0.0</string>
         <key>com.apple.kpi.libkern</key>        <string>9.0.0</string>
         <key>com.apple.kpi.unsupported</key>    <string>9.0.0</string>
-        <key>org.virtualbox.kext.VBoxDrv</key>  <string>@VBOX_VERSION_MAJOR@.@VBOX_VERSION_MINOR@.@VBOX_VERSION_BUILD@</string>
+        <key>io.yoke.kext.YokeDrv</key>  <string>@VBOX_VERSION_MAJOR@.@VBOX_VERSION_MINOR@.@VBOX_VERSION_BUILD@</string>
     </dict>
     <key>OSBundleLibraries_x86_64</key>
     <dict>
@@ -81,7 +81,7 @@
         <key>com.apple.kpi.mach</key>           <string>10.0.0d3</string>
         <key>com.apple.kpi.libkern</key>        <string>10.0.0d3</string>
         <key>com.apple.kpi.unsupported</key>    <string>10.0.0d3</string>
-        <key>org.virtualbox.kext.VBoxDrv</key>  <string>@VBOX_VERSION_MAJOR@.@VBOX_VERSION_MINOR@.@VBOX_VERSION_BUILD@</string>
+        <key>io.yoke.kext.YokeDrv</key>  <string>@VBOX_VERSION_MAJOR@.@VBOX_VERSION_MINOR@.@VBOX_VERSION_BUILD@</string>
     </dict>
 </dict>
 </plist>

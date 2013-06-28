@@ -98,9 +98,9 @@ RT_C_DECLS_END
  * @remark  The method prototypes are ordered somewhat after their order of
  *          invocation, while the implementation is ordered by pair.
  */
-class org_virtualbox_VBoxUSB : public IOService
+class io_yoke_YokeUSB : public IOService
 {
-    OSDeclareDefaultStructors(org_virtualbox_VBoxUSB);
+    OSDeclareDefaultStructors(io_yoke_YokeUSB);
 
 public:
     /** @name IOService
@@ -114,15 +114,15 @@ public:
     virtual void free();
     /** @} */
 };
-OSDefineMetaClassAndStructors(org_virtualbox_VBoxUSB, IOService);
+OSDefineMetaClassAndStructors(io_yoke_YokeUSB, IOService);
 
 
 /**
- * The user client class that pairs up with org_virtualbox_VBoxUSB.
+ * The user client class that pairs up with io_yoke_YokeUSB.
  */
-class org_virtualbox_VBoxUSBClient : public IOUserClient
+class io_yoke_YokeUSBClient : public IOUserClient
 {
-    OSDeclareDefaultStructors(org_virtualbox_VBoxUSBClient);
+    OSDeclareDefaultStructors(io_yoke_YokeUSBClient);
 
 public:
     /** @name IOService & IOUserClient
@@ -148,17 +148,17 @@ public:
 
 private:
     /** The service provider. */
-    org_virtualbox_VBoxUSB *m_pProvider;
+    io_yoke_YokeUSB *m_pProvider;
     /** The client task. */
     task_t m_Task;
     /** The client process. */
     RTPROCESS m_Process;
     /** Pointer to the next user client. */
-    org_virtualbox_VBoxUSBClient * volatile m_pNext;
+    io_yoke_YokeUSBClient * volatile m_pNext;
     /** List of user clients. Protected by g_Mtx. */
-    static org_virtualbox_VBoxUSBClient * volatile s_pHead;
+    static io_yoke_YokeUSBClient * volatile s_pHead;
 };
-OSDefineMetaClassAndStructors(org_virtualbox_VBoxUSBClient, IOUserClient);
+OSDefineMetaClassAndStructors(io_yoke_YokeUSBClient, IOUserClient);
 
 
 /**
@@ -178,9 +178,9 @@ OSDefineMetaClassAndStructors(org_virtualbox_VBoxUSBClient, IOUserClient);
  *          IOUSBUserClientInit::start() and hand the rest of the super calls to IOService. For
  *          now we're doing it by the C++ book.
  */
-class org_virtualbox_VBoxUSBDevice : public IOUSBUserClientInit
+class io_yoke_YokeUSBDevice : public IOUSBUserClientInit
 {
-    OSDeclareDefaultStructors(org_virtualbox_VBoxUSBDevice);
+    OSDeclareDefaultStructors(io_yoke_YokeUSBDevice);
 
 public:
     /** @name IOService
@@ -215,9 +215,9 @@ private:
      * Only valid in stop(). */
     bool m_fBeingUnloaded;
     /** Pointer to the next device in the list. */
-    org_virtualbox_VBoxUSBDevice * volatile m_pNext;
+    io_yoke_YokeUSBDevice * volatile m_pNext;
     /** Pointer to the list head. Protected by g_Mtx. */
-    static org_virtualbox_VBoxUSBDevice * volatile s_pHead;
+    static io_yoke_YokeUSBDevice * volatile s_pHead;
 
 #ifdef DEBUG
     /** The interest notifier. */
@@ -227,20 +227,20 @@ private:
                                       IOService *pProvider, void * pvMsgArg, vm_size_t cbMsgArg);
 #endif
 };
-OSDefineMetaClassAndStructors(org_virtualbox_VBoxUSBDevice, IOUSBUserClientInit);
+OSDefineMetaClassAndStructors(io_yoke_YokeUSBDevice, IOUSBUserClientInit);
 
 
 /**
  * The IOUSBInterface driver class.
  *
  * The main purpose of this is hijack interfaces which device is driven
- * by org_virtualbox_VBoxUSBDevice.
+ * by io_yoke_YokeUSBDevice.
  *
- * @remarks See org_virtualbox_VBoxUSBDevice for why we use IOUSBUserClientInit.
+ * @remarks See io_yoke_YokeUSBDevice for why we use IOUSBUserClientInit.
  */
-class org_virtualbox_VBoxUSBInterface : public IOUSBUserClientInit
+class io_yoke_YokeUSBInterface : public IOUSBUserClientInit
 {
-    OSDeclareDefaultStructors(org_virtualbox_VBoxUSBInterface);
+    OSDeclareDefaultStructors(io_yoke_YokeUSBInterface);
 
 public:
     /** @name IOService
@@ -262,7 +262,7 @@ private:
     /** Should be open the device on the next close notification message? */
     bool volatile m_fOpenOnWasClosed;
 };
-OSDefineMetaClassAndStructors(org_virtualbox_VBoxUSBInterface, IOUSBUserClientInit);
+OSDefineMetaClassAndStructors(io_yoke_YokeUSBInterface, IOUSBUserClientInit);
 
 
 
@@ -286,8 +286,8 @@ RT_C_DECLS_END
 
 /** Mutex protecting the lists. */
 static RTSEMFASTMUTEX g_Mtx = NIL_RTSEMFASTMUTEX;
-org_virtualbox_VBoxUSBClient * volatile org_virtualbox_VBoxUSBClient::s_pHead = NULL;
-org_virtualbox_VBoxUSBDevice * volatile org_virtualbox_VBoxUSBDevice::s_pHead = NULL;
+io_yoke_YokeUSBClient * volatile io_yoke_YokeUSBClient::s_pHead = NULL;
+io_yoke_YokeUSBDevice * volatile io_yoke_YokeUSBDevice::s_pHead = NULL;
 
 /** Global instance count - just for checking proving that everything is destroyed correctly. */
 static volatile uint32_t g_cInstances = 0;
@@ -435,7 +435,7 @@ DECLINLINE(const char *) DbgGetIOKitMessageName(UInt32 enmMsg)
 
 /*
  *
- * org_virtualbox_VBoxUSB
+ * io_yoke_YokeUSB
  *
  */
 
@@ -445,7 +445,7 @@ DECLINLINE(const char *) DbgGetIOKitMessageName(UInt32 enmMsg)
  * @remark  Only for logging.
  */
 bool
-org_virtualbox_VBoxUSB::init(OSDictionary *pDictionary)
+io_yoke_YokeUSB::init(OSDictionary *pDictionary)
 {
     uint32_t cInstances = ASMAtomicIncU32(&g_cInstances);
     Log(("VBoxUSB::init([%p], %p) new g_cInstances=%d\n", this, pDictionary, cInstances));
@@ -464,7 +464,7 @@ org_virtualbox_VBoxUSB::init(OSDictionary *pDictionary)
  * @remark  Only for logging.
  */
 void
-org_virtualbox_VBoxUSB::free()
+io_yoke_YokeUSB::free()
 {
     uint32_t cInstances = ASMAtomicDecU32(&g_cInstances); NOREF(cInstances);
     Log(("VBoxUSB::free([%p]) new g_cInstances=%d\n", this, cInstances));
@@ -476,7 +476,7 @@ org_virtualbox_VBoxUSB::free()
  * Start this service.
  */
 bool
-org_virtualbox_VBoxUSB::start(IOService *pProvider)
+io_yoke_YokeUSB::start(IOService *pProvider)
 {
     Log(("VBoxUSB::start([%p], %p {%s})\n", this, pProvider, pProvider->getName()));
 
@@ -495,7 +495,7 @@ org_virtualbox_VBoxUSB::start(IOService *pProvider)
  * @remark  Only for logging.
  */
 void
-org_virtualbox_VBoxUSB::stop(IOService *pProvider)
+io_yoke_YokeUSB::stop(IOService *pProvider)
 {
     Log(("VBoxUSB::stop([%p], %p (%s))\n", this, pProvider, pProvider->getName()));
     IOService::stop(pProvider);
@@ -507,7 +507,7 @@ org_virtualbox_VBoxUSB::stop(IOService *pProvider)
  * @remark  Only for logging.
  */
 bool
-org_virtualbox_VBoxUSB::open(IOService *pForClient, IOOptionBits fOptions/* = 0*/, void *pvArg/* = 0*/)
+io_yoke_YokeUSB::open(IOService *pForClient, IOOptionBits fOptions/* = 0*/, void *pvArg/* = 0*/)
 {
     Log(("VBoxUSB::open([%p], %p, %#x, %p)\n", this, pForClient, fOptions, pvArg));
     bool fRc = IOService::open(pForClient, fOptions, pvArg);
@@ -521,7 +521,7 @@ org_virtualbox_VBoxUSB::open(IOService *pForClient, IOOptionBits fOptions/* = 0*
  * @remark  Only for logging.
  */
 void
-org_virtualbox_VBoxUSB::close(IOService *pForClient, IOOptionBits fOptions/* = 0*/)
+io_yoke_YokeUSB::close(IOService *pForClient, IOOptionBits fOptions/* = 0*/)
 {
     Log(("VBoxUSB::close([%p], %p, %#x)\n", this, pForClient, fOptions));
     IOService::close(pForClient, fOptions);
@@ -533,7 +533,7 @@ org_virtualbox_VBoxUSB::close(IOService *pForClient, IOOptionBits fOptions/* = 0
  * @remark  Only for logging.
  */
 bool
-org_virtualbox_VBoxUSB::terminate(IOOptionBits fOptions)
+io_yoke_YokeUSB::terminate(IOOptionBits fOptions)
 {
     Log(("VBoxUSB::terminate([%p], %#x): g_cInstances=%d\n", this, fOptions, g_cInstances));
     bool fRc = IOService::terminate(fOptions);
@@ -553,7 +553,7 @@ org_virtualbox_VBoxUSB::terminate(IOOptionBits fOptions)
 
 /*
  *
- * org_virtualbox_VBoxUSBClient
+ * io_yoke_YokeUSBClient
  *
  */
 
@@ -562,7 +562,7 @@ org_virtualbox_VBoxUSB::terminate(IOOptionBits fOptions)
  * Initializer called when the client opens the service.
  */
 bool
-org_virtualbox_VBoxUSBClient::initWithTask(task_t OwningTask, void *pvSecurityId, UInt32 u32Type)
+io_yoke_YokeUSBClient::initWithTask(task_t OwningTask, void *pvSecurityId, UInt32 u32Type)
 {
     if (!OwningTask)
     {
@@ -597,7 +597,7 @@ org_virtualbox_VBoxUSBClient::initWithTask(task_t OwningTask, void *pvSecurityId
  * @remark  Only for logging.
  */
 void
-org_virtualbox_VBoxUSBClient::free()
+io_yoke_YokeUSBClient::free()
 {
     uint32_t cInstances = ASMAtomicDecU32(&g_cInstances); NOREF(cInstances);
     Log(("VBoxUSBClient::free([%p]) new g_cInstances=%d\n", this, cInstances));
@@ -609,12 +609,12 @@ org_virtualbox_VBoxUSBClient::free()
  * Start the client service.
  */
 bool
-org_virtualbox_VBoxUSBClient::start(IOService *pProvider)
+io_yoke_YokeUSBClient::start(IOService *pProvider)
 {
     Log(("VBoxUSBClient::start([%p], %p)\n", this, pProvider));
     if (IOUserClient::start(pProvider))
     {
-        m_pProvider = OSDynamicCast(org_virtualbox_VBoxUSB, pProvider);
+        m_pProvider = OSDynamicCast(io_yoke_YokeUSB, pProvider);
         if (m_pProvider)
         {
             /*
@@ -629,7 +629,7 @@ org_virtualbox_VBoxUSBClient::start(IOService *pProvider)
 
             return true;
         }
-        Log(("VBoxUSBClient::start: %p isn't org_virtualbox_VBoxUSB\n", pProvider));
+        Log(("VBoxUSBClient::start: %p isn't io_yoke_YokeUSB\n", pProvider));
     }
     return false;
 }
@@ -639,7 +639,7 @@ org_virtualbox_VBoxUSBClient::start(IOService *pProvider)
  * Client exits normally.
  */
 IOReturn
-org_virtualbox_VBoxUSBClient::clientClose(void)
+io_yoke_YokeUSBClient::clientClose(void)
 {
     Log(("VBoxUSBClient::clientClose([%p:{.m_Process=%d}])\n", this, (int)m_Process));
 
@@ -648,8 +648,8 @@ org_virtualbox_VBoxUSBClient::clientClose(void)
      */
     VBOXUSB_LOCK();
 
-    org_virtualbox_VBoxUSBClient *pPrev = NULL;
-    for (org_virtualbox_VBoxUSBClient *pCur = s_pHead; pCur; pCur = pCur->m_pNext)
+    io_yoke_YokeUSBClient *pPrev = NULL;
+    for (io_yoke_YokeUSBClient *pCur = s_pHead; pCur; pCur = pCur->m_pNext)
     {
         if (pCur == this)
         {
@@ -676,7 +676,7 @@ org_virtualbox_VBoxUSBClient::clientClose(void)
      * immediate release or release upon close.
      */
     if (m_Process != NIL_RTPROCESS)
-        org_virtualbox_VBoxUSBDevice::scheduleReleaseByOwner(m_Process);
+        io_yoke_YokeUSBDevice::scheduleReleaseByOwner(m_Process);
 
     /*
      * Initiate termination.
@@ -693,7 +693,7 @@ org_virtualbox_VBoxUSBClient::clientClose(void)
  * @remark  Only for logging.
  */
 IOReturn
-org_virtualbox_VBoxUSBClient::clientDied(void)
+io_yoke_YokeUSBClient::clientDied(void)
 {
     Log(("VBoxUSBClient::clientDied([%p]) m_Task=%p R0Process=%p Process=%d\n",
              this, m_Task, RTR0ProcHandleSelf(), RTProcSelf()));
@@ -708,7 +708,7 @@ org_virtualbox_VBoxUSBClient::clientDied(void)
  * @remark  Only for logging.
  */
 bool
-org_virtualbox_VBoxUSBClient::terminate(IOOptionBits fOptions)
+io_yoke_YokeUSBClient::terminate(IOOptionBits fOptions)
 {
     /* kIOServiceRecursing, kIOServiceRequired, kIOServiceTerminate, kIOServiceSynchronous - interesting option bits */
     Log(("VBoxUSBClient::terminate([%p], %#x)\n", this, fOptions));
@@ -721,7 +721,7 @@ org_virtualbox_VBoxUSBClient::terminate(IOOptionBits fOptions)
  * @remark  Only for logging.
  */
 bool
-org_virtualbox_VBoxUSBClient::finalize(IOOptionBits fOptions)
+io_yoke_YokeUSBClient::finalize(IOOptionBits fOptions)
 {
     Log(("VBoxUSBClient::finalize([%p], %#x)\n", this, fOptions));
     return IOUserClient::finalize(fOptions);
@@ -732,7 +732,7 @@ org_virtualbox_VBoxUSBClient::finalize(IOOptionBits fOptions)
  * Stop the client service.
  */
 void
-org_virtualbox_VBoxUSBClient::stop(IOService *pProvider)
+io_yoke_YokeUSBClient::stop(IOService *pProvider)
 {
     Log(("VBoxUSBClient::stop([%p])\n", this));
     IOUserClient::stop(pProvider);
@@ -742,8 +742,8 @@ org_virtualbox_VBoxUSBClient::stop(IOService *pProvider)
      */
     VBOXUSB_LOCK();
 
-    org_virtualbox_VBoxUSBClient *pPrev = NULL;
-    for (org_virtualbox_VBoxUSBClient *pCur = s_pHead; pCur; pCur = pCur->m_pNext)
+    io_yoke_YokeUSBClient *pPrev = NULL;
+    for (io_yoke_YokeUSBClient *pCur = s_pHead; pCur; pCur = pCur->m_pNext)
     {
         if (pCur == this)
         {
@@ -770,14 +770,14 @@ org_virtualbox_VBoxUSBClient::stop(IOService *pProvider)
  * @param   iMethod         The method index.
  */
 IOExternalMethod *
-org_virtualbox_VBoxUSBClient::getTargetAndMethodForIndex(IOService **ppService, UInt32 iMethod)
+io_yoke_YokeUSBClient::getTargetAndMethodForIndex(IOService **ppService, UInt32 iMethod)
 {
     static IOExternalMethod s_aMethods[VBOXUSBMETHOD_END] =
     {
         /*[VBOXUSBMETHOD_ADD_FILTER] = */
         {
             (IOService *)0,                                         /* object */
-            (IOMethod)&org_virtualbox_VBoxUSBClient::addFilter,     /* func */
+            (IOMethod)&io_yoke_YokeUSBClient::addFilter,     /* func */
             kIOUCStructIStructO,                                    /* flags - struct input (count0) and struct output (count1) */
             sizeof(USBFILTER),                                      /* count0 - size of the input struct. */
             sizeof(VBOXUSBADDFILTEROUT)                             /* count1 - size of the return struct. */
@@ -785,7 +785,7 @@ org_virtualbox_VBoxUSBClient::getTargetAndMethodForIndex(IOService **ppService, 
         /* [VBOXUSBMETHOD_FILTER_REMOVE] = */
         {
             (IOService *)0,                                         /* object */
-            (IOMethod)&org_virtualbox_VBoxUSBClient::removeFilter,  /* func */
+            (IOMethod)&io_yoke_YokeUSBClient::removeFilter,  /* func */
             kIOUCStructIStructO,                                    /* flags - struct input (count0) and struct output (count1) */
             sizeof(uintptr_t),                                      /* count0 - size of the input (id) */
             sizeof(int)                                             /* count1 - size of the output (rc) */
@@ -810,7 +810,7 @@ org_virtualbox_VBoxUSBClient::getTargetAndMethodForIndex(IOService **ppService, 
  * @param   pcbOut      In/Out - sizeof(*pOut).
  */
 IOReturn
-org_virtualbox_VBoxUSBClient::addFilter(PUSBFILTER pFilter, PVBOXUSBADDFILTEROUT pOut, IOByteCount cbFilter, IOByteCount *pcbOut)
+io_yoke_YokeUSBClient::addFilter(PUSBFILTER pFilter, PVBOXUSBADDFILTEROUT pOut, IOByteCount cbFilter, IOByteCount *pcbOut)
 {
     Log(("VBoxUSBClient::addFilter: [%p:{.m_Process=%d}] pFilter=%p pOut=%p\n", this, (int)m_Process, pFilter, pOut));
 
@@ -871,7 +871,7 @@ org_virtualbox_VBoxUSBClient::addFilter(PUSBFILTER pFilter, PVBOXUSBADDFILTEROUT
  * @param   pcbOut  In/Out - sizeof(*prc).
  */
 IOReturn
-org_virtualbox_VBoxUSBClient::removeFilter(uintptr_t *puId, int *prc, IOByteCount cbIn, IOByteCount *pcbOut)
+io_yoke_YokeUSBClient::removeFilter(uintptr_t *puId, int *prc, IOByteCount cbIn, IOByteCount *pcbOut)
 {
     Log(("VBoxUSBClient::removeFilter: [%p:{.m_Process=%d}] *puId=%p m_Proc\n", this, (int)m_Process, *puId));
 
@@ -909,11 +909,11 @@ org_virtualbox_VBoxUSBClient::removeFilter(uintptr_t *puId, int *prc, IOByteCoun
  *          as it turned out to be more bothersome than first imagined.
  */
 /* static*/ bool
-org_virtualbox_VBoxUSBClient::isClientTask(task_t ClientTask)
+io_yoke_YokeUSBClient::isClientTask(task_t ClientTask)
 {
     VBOXUSB_LOCK();
 
-    for (org_virtualbox_VBoxUSBClient *pCur = s_pHead; pCur; pCur = pCur->m_pNext)
+    for (io_yoke_YokeUSBClient *pCur = s_pHead; pCur; pCur = pCur->m_pNext)
         if (pCur->m_Task == ClientTask)
         {
             VBOXUSB_UNLOCK();
@@ -939,7 +939,7 @@ org_virtualbox_VBoxUSBClient::isClientTask(task_t ClientTask)
 
 /*
  *
- * org_virtualbox_VBoxUSBDevice
+ * io_yoke_YokeUSBDevice
  *
  */
 
@@ -951,7 +951,7 @@ org_virtualbox_VBoxUSBClient::isClientTask(task_t ClientTask)
  *                          property table, or NULL. Hand it up to our parents.
  */
 bool
-org_virtualbox_VBoxUSBDevice::init(OSDictionary *pDictionary)
+io_yoke_YokeUSBDevice::init(OSDictionary *pDictionary)
 {
     uint32_t cInstances = ASMAtomicIncU32(&g_cInstances);
     Log(("VBoxUSBDevice::init([%p], %p) new g_cInstances=%d\n", this, pDictionary, cInstances));
@@ -977,7 +977,7 @@ org_virtualbox_VBoxUSBDevice::init(OSDictionary *pDictionary)
  * @remark  Only for logging.
  */
 void
-org_virtualbox_VBoxUSBDevice::free()
+io_yoke_YokeUSBDevice::free()
 {
     uint32_t cInstances = ASMAtomicDecU32(&g_cInstances); NOREF(cInstances);
     Log(("VBoxUSBDevice::free([%p]) new g_cInstances=%d\n", this, cInstances));
@@ -1004,7 +1004,7 @@ org_virtualbox_VBoxUSBDevice::free()
  * @param   pi32Score       Where to store the probe score.
  */
 IOService *
-org_virtualbox_VBoxUSBDevice::probe(IOService *pProvider, SInt32 *pi32Score)
+io_yoke_YokeUSBDevice::probe(IOService *pProvider, SInt32 *pi32Score)
 {
     Log(("VBoxUSBDevice::probe([%p], %p {%s}, %p={%d})\n", this,
              pProvider, pProvider->getName(), pi32Score, pi32Score ? *pi32Score : 0));
@@ -1106,7 +1106,7 @@ org_virtualbox_VBoxUSBDevice::probe(IOService *pProvider, SInt32 *pi32Score)
  * @param   pProvider       The provider instance.
  */
 bool
-org_virtualbox_VBoxUSBDevice::start(IOService *pProvider)
+io_yoke_YokeUSBDevice::start(IOService *pProvider)
 {
     Log(("VBoxUSBDevice::start([%p:{.m_Owner=%d, .m_uId=%p}], %p {%s})\n",
              this, m_Owner, m_uId, pProvider, pProvider->getName()));
@@ -1121,7 +1121,7 @@ org_virtualbox_VBoxUSBDevice::start(IOService *pProvider)
 #ifdef DEBUG
     /* for some extra log messages */
     m_pNotifier = pProvider->registerInterest(gIOGeneralInterest,
-                                              &org_virtualbox_VBoxUSBDevice::MyInterestHandler,
+                                              &io_yoke_YokeUSBDevice::MyInterestHandler,
                                               this,     /* pvTarget */
                                               NULL);    /* pvRefCon */
 #endif
@@ -1174,7 +1174,7 @@ org_virtualbox_VBoxUSBDevice::start(IOService *pProvider)
  * @param   pProvider       The provider instance.
  */
 void
-org_virtualbox_VBoxUSBDevice::stop(IOService *pProvider)
+io_yoke_YokeUSBDevice::stop(IOService *pProvider)
 {
     Log(("VBoxUSBDevice::stop([%p], %p {%s})\n", this, pProvider, pProvider->getName()));
 
@@ -1183,8 +1183,8 @@ org_virtualbox_VBoxUSBDevice::stop(IOService *pProvider)
      */
     VBOXUSB_LOCK();
 
-    org_virtualbox_VBoxUSBDevice *pPrev = NULL;
-    for (org_virtualbox_VBoxUSBDevice *pCur = s_pHead; pCur; pCur = pCur->m_pNext)
+    io_yoke_YokeUSBDevice *pPrev = NULL;
+    for (io_yoke_YokeUSBDevice *pCur = s_pHead; pCur; pCur = pCur->m_pNext)
     {
         if (pCur == this)
         {
@@ -1273,7 +1273,7 @@ org_virtualbox_VBoxUSBDevice::stop(IOService *pProvider)
  * @remark  Only for logging.
  */
 bool
-org_virtualbox_VBoxUSBDevice::terminate(IOOptionBits fOptions)
+io_yoke_YokeUSBDevice::terminate(IOOptionBits fOptions)
 {
     /* kIOServiceRecursing, kIOServiceRequired, kIOServiceTerminate, kIOServiceSynchronous - interesting option bits */
     Log(("VBoxUSBDevice::terminate([%p], %#x)\n", this, fOptions));
@@ -1312,7 +1312,7 @@ org_virtualbox_VBoxUSBDevice::terminate(IOOptionBits fOptions)
  * @param   pvArg           Message argument.
  */
 IOReturn
-org_virtualbox_VBoxUSBDevice::message(UInt32 enmMsg, IOService *pProvider, void *pvArg)
+io_yoke_YokeUSBDevice::message(UInt32 enmMsg, IOService *pProvider, void *pvArg)
 {
     Log(("VBoxUSBDevice::message([%p], %#x {%s}, %p {%s}, %p) - pid=%d\n",
              this, enmMsg, DbgGetIOKitMessageName(enmMsg), pProvider, pProvider->getName(), pvArg, RTProcSelf()));
@@ -1349,7 +1349,7 @@ org_virtualbox_VBoxUSBDevice::message(UInt32 enmMsg, IOService *pProvider, void 
             }
             else
             {
-                if (org_virtualbox_VBoxUSBClient::isClientTask(current_task()))
+                if (io_yoke_YokeUSBClient::isClientTask(current_task()))
                 {
                     Log(("VBoxUSBDevice::message([%p],%p {%s}, %p) - pid=%d task=%p: client process, closing.\n",
                              this, pProvider, pProvider->getName(), pvArg, RTProcSelf(), current_task()));
@@ -1461,7 +1461,7 @@ org_virtualbox_VBoxUSBDevice::message(UInt32 enmMsg, IOService *pProvider, void 
  * @param   Owner       The owner process.
  */
 /* static */ void
-org_virtualbox_VBoxUSBDevice::scheduleReleaseByOwner(RTPROCESS Owner)
+io_yoke_YokeUSBDevice::scheduleReleaseByOwner(RTPROCESS Owner)
 {
     Log2(("VBoxUSBDevice::scheduleReleaseByOwner: Owner=%d\n", Owner));
     AssertReturnVoid(Owner && Owner != NIL_RTPROCESS);
@@ -1474,7 +1474,7 @@ org_virtualbox_VBoxUSBDevice::scheduleReleaseByOwner(RTPROCESS Owner)
      */
     VBOXUSB_LOCK();
 
-    org_virtualbox_VBoxUSBDevice *pCur;
+    io_yoke_YokeUSBDevice *pCur;
     do
     {
         for (pCur = s_pHead; pCur; pCur = pCur->m_pNext)
@@ -1525,10 +1525,10 @@ org_virtualbox_VBoxUSBDevice::scheduleReleaseByOwner(RTPROCESS Owner)
 
 #ifdef DEBUG
 /*static*/ IOReturn
-org_virtualbox_VBoxUSBDevice::MyInterestHandler(void *pvTarget, void *pvRefCon, UInt32 enmMsgType,
+io_yoke_YokeUSBDevice::MyInterestHandler(void *pvTarget, void *pvRefCon, UInt32 enmMsgType,
                                                 IOService *pProvider, void * pvMsgArg, vm_size_t cbMsgArg)
 {
-    org_virtualbox_VBoxUSBDevice *pThis = (org_virtualbox_VBoxUSBDevice *)pvTarget;
+    io_yoke_YokeUSBDevice *pThis = (io_yoke_YokeUSBDevice *)pvTarget;
     if (!pThis)
         return kIOReturnError;
 
@@ -1581,7 +1581,7 @@ org_virtualbox_VBoxUSBDevice::MyInterestHandler(void *pvTarget, void *pvRefCon, 
 
 /*
  *
- * org_virtualbox_VBoxUSBInterface
+ * io_yoke_YokeUSBInterface
  *
  */
 
@@ -1589,7 +1589,7 @@ org_virtualbox_VBoxUSBDevice::MyInterestHandler(void *pvTarget, void *pvRefCon, 
  * Initialize our data members.
  */
 bool
-org_virtualbox_VBoxUSBInterface::init(OSDictionary *pDictionary)
+io_yoke_YokeUSBInterface::init(OSDictionary *pDictionary)
 {
     uint32_t cInstances = ASMAtomicIncU32(&g_cInstances);
     Log(("VBoxUSBInterface::init([%p], %p) new g_cInstances=%d\n", this, pDictionary, cInstances));
@@ -1607,7 +1607,7 @@ org_virtualbox_VBoxUSBInterface::init(OSDictionary *pDictionary)
  * @remark  Only for logging.
  */
 void
-org_virtualbox_VBoxUSBInterface::free()
+io_yoke_YokeUSBInterface::free()
 {
     uint32_t cInstances = ASMAtomicDecU32(&g_cInstances); NOREF(cInstances);
     Log(("VBoxUSBInterfaces::free([%p]) new g_cInstances=%d\n", this, cInstances));
@@ -1618,12 +1618,12 @@ org_virtualbox_VBoxUSBInterface::free()
 /**
  * Probe the interface to see if we're the right driver for it.
  *
- * We implement this similarly to org_virtualbox_VBoxUSBDevice, except that
+ * We implement this similarly to io_yoke_YokeUSBDevice, except that
  * we don't bother matching filters but instead just check if the parent is
- * handled by org_virtualbox_VBoxUSBDevice or not.
+ * handled by io_yoke_YokeUSBDevice or not.
  */
 IOService *
-org_virtualbox_VBoxUSBInterface::probe(IOService *pProvider, SInt32 *pi32Score)
+io_yoke_YokeUSBInterface::probe(IOService *pProvider, SInt32 *pi32Score)
 {
     Log(("VBoxUSBInterface::probe([%p], %p {%s}, %p={%d})\n", this,
              pProvider, pProvider->getName(), pi32Score, pi32Score ? *pi32Score : 0));
@@ -1646,7 +1646,7 @@ org_virtualbox_VBoxUSBInterface::probe(IOService *pProvider, SInt32 *pi32Score)
             {
                 const OSMetaClass *pMetaClass = pSibling->getMetaClass();
                 Log2(("sibling: %p - %s - %s\n", pMetaClass, pSibling->getName(), pMetaClass->getClassName()));
-                if (pMetaClass == &org_virtualbox_VBoxUSBDevice::gMetaClass)
+                if (pMetaClass == &io_yoke_YokeUSBDevice::gMetaClass)
                 {
                     fHijackIt = true;
                     break;
@@ -1672,7 +1672,7 @@ org_virtualbox_VBoxUSBInterface::probe(IOService *pProvider, SInt32 *pi32Score)
  * Start the driver (this), retain and open the USB interface object (pProvider).
  */
 bool
-org_virtualbox_VBoxUSBInterface::start(IOService *pProvider)
+io_yoke_YokeUSBInterface::start(IOService *pProvider)
 {
     Log(("VBoxUSBInterface::start([%p], %p {%s})\n", this, pProvider, pProvider->getName()));
 
@@ -1709,9 +1709,9 @@ org_virtualbox_VBoxUSBInterface::start(IOService *pProvider)
  * Close and release the USB interface object (pProvider) and stop the driver (this).
  */
 void
-org_virtualbox_VBoxUSBInterface::stop(IOService *pProvider)
+io_yoke_YokeUSBInterface::stop(IOService *pProvider)
 {
-    Log(("org_virtualbox_VBoxUSBInterface::stop([%p], %p {%s})\n", this, pProvider, pProvider->getName()));
+    Log(("io_yoke_YokeUSBInterface::stop([%p], %p {%s})\n", this, pProvider, pProvider->getName()));
 
     /*
      * Close and release the IOUSBInterface if didn't do that already in message().
@@ -1741,7 +1741,7 @@ org_virtualbox_VBoxUSBInterface::stop(IOService *pProvider)
  * @remark  Only for logging.
  */
 bool
-org_virtualbox_VBoxUSBInterface::terminate(IOOptionBits fOptions)
+io_yoke_YokeUSBInterface::terminate(IOOptionBits fOptions)
 {
     /* kIOServiceRecursing, kIOServiceRequired, kIOServiceTerminate, kIOServiceSynchronous - interesting option bits */
     Log(("VBoxUSBInterface::terminate([%p], %#x)\n", this, fOptions));
@@ -1750,10 +1750,10 @@ org_virtualbox_VBoxUSBInterface::terminate(IOOptionBits fOptions)
 
 
 /**
- * @copydoc org_virtualbox_VBoxUSBDevice::message
+ * @copydoc io_yoke_YokeUSBDevice::message
  */
 IOReturn
-org_virtualbox_VBoxUSBInterface::message(UInt32 enmMsg, IOService *pProvider, void *pvArg)
+io_yoke_YokeUSBInterface::message(UInt32 enmMsg, IOService *pProvider, void *pvArg)
 {
     Log(("VBoxUSBInterface::message([%p], %#x {%s}, %p {%s}, %p)\n",
              this, enmMsg, DbgGetIOKitMessageName(enmMsg), pProvider, pProvider->getName(), pvArg));
@@ -1762,7 +1762,7 @@ org_virtualbox_VBoxUSBInterface::message(UInt32 enmMsg, IOService *pProvider, vo
     switch (enmMsg)
     {
         /*
-         * See explanation in org_virtualbox_VBoxUSBDevice::message.
+         * See explanation in io_yoke_YokeUSBDevice::message.
          */
         case kIOMessageServiceIsRequestingClose:
             irc = kIOReturnExclusiveAccess;
@@ -1778,7 +1778,7 @@ org_virtualbox_VBoxUSBInterface::message(UInt32 enmMsg, IOService *pProvider, vo
             }
             else
             {
-                if (org_virtualbox_VBoxUSBClient::isClientTask(current_task()))
+                if (io_yoke_YokeUSBClient::isClientTask(current_task()))
                 {
                     Log(("VBoxUSBInterface::message([%p],%p {%s}, %p) - pid=%d task=%p: client process, closing.\n",
                              this, pProvider, pProvider->getName(), pvArg, RTProcSelf(), current_task()));

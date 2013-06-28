@@ -34,7 +34,7 @@
 *   Defined Constants And Macros                                               *
 *******************************************************************************/
 /** The IOClass key of the service (see VBoxUSB.cpp / Info.plist). */
-#define IOCLASS_NAME    "org_virtualbox_VBoxUSB"
+#define IOCLASS_NAME    "io_yoke_YokeUSB"
 
 
 /*******************************************************************************
