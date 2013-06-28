@@ -2,10 +2,10 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleDevelopmentRegion</key>        <string>English</string>
-    <key>CFBundleExecutable</key>               <string>VBoxNetFlt</string>
-    <key>CFBundleIdentifier</key>               <string>org.virtualbox.kext.VBoxNetFlt</string>
+    <key>CFBundleExecutable</key>               <string>YokeNetFlt</string>
+    <key>CFBundleIdentifier</key>               <string>io.yoke.kext.YokeNetFlt</string>
     <key>CFBundleInfoDictionaryVersion</key>    <string>6.0</string>
-    <key>CFBundleName</key>                     <string>VBoxNetFlt</string>
+    <key>CFBundleName</key>                     <string>YokeNetFlt</string>
     <key>CFBundlePackageType</key>              <string>KEXT</string>
     <key>CFBundleSignature</key>                <string>????</string>
     <key>CFBundleGetInfoString</key>            <string>@VBOX_PRODUCT@ @VBOX_VERSION_STRING@, © 2007-@VBOX_C_YEAR@ @VBOX_VENDOR@</string>
@@ -21,7 +21,7 @@
         <key>com.apple.kpi.libkern</key>        <string>8.8.1</string>
         <key>com.apple.kpi.unsupported</key>    <string>8.8.1</string>
         <key>com.apple.kpi.iokit</key>          <string>8.8.1</string>
-        <key>org.virtualbox.kext.VBoxDrv</key>  <string>@VBOX_VERSION_MAJOR@.@VBOX_VERSION_MINOR@.@VBOX_VERSION_BUILD@</string>
+        <key>io.yoke.kext.YokeDrv</key>  <string>@VBOX_VERSION_MAJOR@.@VBOX_VERSION_MINOR@.@VBOX_VERSION_BUILD@</string>
     </dict>
     <key>OSBundleLibraries_x86_64</key>
     <dict>
@@ -30,7 +30,7 @@
         <key>com.apple.kpi.libkern</key>        <string>10.0.0d3</string>
         <key>com.apple.kpi.unsupported</key>    <string>10.0.0d3</string>
         <key>com.apple.kpi.iokit</key>          <string>10.0.0d3</string>
-        <key>org.virtualbox.kext.VBoxDrv</key>  <string>@VBOX_VERSION_MAJOR@.@VBOX_VERSION_MINOR@.@VBOX_VERSION_BUILD@</string>
+        <key>io.yoke.kext.YokeDrv</key>  <string>@VBOX_VERSION_MAJOR@.@VBOX_VERSION_MINOR@.@VBOX_VERSION_BUILD@</string>
     </dict>
 </dict>
 </plist>

@@ -156,8 +156,8 @@ static kern_return_t    VBoxNetFltDarwinStart(struct kmod_info *pKModInfo, void 
     rc = RTR0Init(0);
     if (RT_SUCCESS(rc))
     {
-        Log(("VBoxNetFltDarwinStart\n"));
-        errno_t err = mbuf_tag_id_find("org.VirtualBox.kext.VBoxFltDrv", &g_idTag);
+        Log(("YokeNetFltDarwinStart\n"));
+        errno_t err = mbuf_tag_id_find("io.yoke.kext.YokeFltDrv", &g_idTag);
         if (!err)
         {
             /*
@@ -170,18 +170,18 @@ static kern_return_t    VBoxNetFltDarwinStart(struct kmod_info *pKModInfo, void 
             rc = vboxNetFltInitGlobalsAndIdc(&g_VBoxNetFltGlobals);
             if (RT_SUCCESS(rc))
             {
-                LogRel(("VBoxFltDrv: version " VBOX_VERSION_STRING " r%d\n", VBOX_SVN_REV));
+                LogRel(("YokeFltDrv: version " VBOX_VERSION_STRING " r%d\n", VBOX_SVN_REV));
                 return KMOD_RETURN_SUCCESS;
             }
 
-            LogRel(("VBoxFltDrv: failed to initialize device extension (rc=%d)\n", rc));
+            LogRel(("YokeFltDrv: failed to initialize device extension (rc=%d)\n", rc));
         }
         else
-            LogRel(("VBoxFltDrv: mbuf_tag_id_find failed, err=%d\n", err));
+            LogRel(("YokeFltDrv: mbuf_tag_id_find failed, err=%d\n", err));
         RTR0Term();
     }
     else
-        printf("VBoxFltDrv: failed to initialize IPRT (rc=%d)\n", rc);
+        printf("YokeFltDrv: failed to initialize IPRT (rc=%d)\n", rc);
 
     memset(&g_VBoxNetFltGlobals, 0, sizeof(g_VBoxNetFltGlobals));
     return KMOD_RETURN_FAILURE;
@@ -193,7 +193,7 @@ static kern_return_t    VBoxNetFltDarwinStart(struct kmod_info *pKModInfo, void 
  */
 static kern_return_t VBoxNetFltDarwinStop(struct kmod_info *pKModInfo, void *pvData)
 {
-    Log(("VBoxNetFltDarwinStop\n"));
+    Log(("YokeNetFltDarwinStop\n"));
 
     /*
      * Refuse to unload if anyone is currently using the filter driver.
@@ -203,7 +203,7 @@ static kern_return_t VBoxNetFltDarwinStop(struct kmod_info *pKModInfo, void *pvD
     int rc = vboxNetFltTryDeleteIdcAndGlobals(&g_VBoxNetFltGlobals);
     if (RT_FAILURE(rc))
     {
-        Log(("VBoxNetFltDarwinStop - failed, busy.\n"));
+        Log(("YokeNetFltDarwinStop - failed, busy.\n"));
         return KMOD_RETURN_FAILURE;
     }
 
@@ -672,7 +672,7 @@ static void vboxNetFltDarwinIffDetached(void *pvThis, ifnet_t pIfNet)
 
     if (pIfNet)
         ifnet_release(pIfNet);
-    LogRel(("VBoxNetFlt: was detached from '%s' (%d)\n", pThis->szName, cPromisc));
+    LogRel(("YokeNetFlt: was detached from '%s' (%d)\n", pThis->szName, cPromisc));
 }
 
 
@@ -907,9 +907,9 @@ static int vboxNetFltDarwinAttachToInterface(PVBOXNETFLTINS pThis, bool fRedisco
     {
         Assert(err == ENXIO);
         if (!fRediscovery)
-            LogRel(("VBoxFltDrv: failed to find ifnet '%s' (err=%d)\n", pThis->szName, err));
+            LogRel(("YokeFltDrv: failed to find ifnet '%s' (err=%d)\n", pThis->szName, err));
         else
-            Log(("VBoxFltDrv: failed to find ifnet '%s' (err=%d)\n", pThis->szName, err));
+            Log(("YokeFltDrv: failed to find ifnet '%s' (err=%d)\n", pThis->szName, err));
         return VERR_INTNET_FLT_IF_NOT_FOUND;
     }
 
@@ -928,7 +928,7 @@ static int vboxNetFltDarwinAttachToInterface(PVBOXNETFLTINS pThis, bool fRedisco
          */
         struct iff_filter RegRec;
         RegRec.iff_cookie   = pThis;
-        RegRec.iff_name     = "VBoxNetFlt";
+        RegRec.iff_name     = "YokeNetFlt";
         RegRec.iff_protocol = 0;
         RegRec.iff_input    = vboxNetFltDarwinIffInput;
         RegRec.iff_output   = vboxNetFltDarwinIffOutput;
@@ -968,9 +968,9 @@ static int vboxNetFltDarwinAttachToInterface(PVBOXNETFLTINS pThis, bool fRedisco
 
     int rc = RTErrConvertFromErrno(err);
     if (RT_SUCCESS(rc))
-        LogRel(("VBoxFltDrv: attached to '%s' / %.*Rhxs\n", pThis->szName, sizeof(pThis->u.s.MacAddr), &pThis->u.s.MacAddr));
+        LogRel(("YokeFltDrv: attached to '%s' / %.*Rhxs\n", pThis->szName, sizeof(pThis->u.s.MacAddr), &pThis->u.s.MacAddr));
     else
-        LogRel(("VBoxFltDrv: failed to attach to ifnet '%s' (err=%d)\n", pThis->szName, err));
+        LogRel(("YokeFltDrv: failed to attach to ifnet '%s' (err=%d)\n", pThis->szName, err));
     return rc;
 }
 
@@ -1111,17 +1111,17 @@ void vboxNetFltPortOsSetActive(PVBOXNETFLTINS pThis, bool fActive)
                             if (!err)
                                 Log(("vboxNetFlt: fixed IFF_PROMISC on %s (%d->%d)\n", pThis->szName, cPromiscBefore, VBOX_GET_PCOUNT(pIfNet)));
                             else
-                                Log(("VBoxNetFlt: failed to fix IFF_PROMISC on %s, err=%d (%d->%d)\n",
+                                Log(("YokeNetFlt: failed to fix IFF_PROMISC on %s, err=%d (%d->%d)\n",
                                      pThis->szName, err, cPromiscBefore, VBOX_GET_PCOUNT(pIfNet)));
                         }
                     }
                     else
-                        Log(("VBoxNetFlt: ifnet_set_promiscuous -> err=%d grr! (%d->%d)\n", err, cPromiscBefore, VBOX_GET_PCOUNT(pIfNet)));
+                        Log(("YokeNetFlt: ifnet_set_promiscuous -> err=%d grr! (%d->%d)\n", err, cPromiscBefore, VBOX_GET_PCOUNT(pIfNet)));
                 }
                 else if (!err)
-                    Log(("VBoxNetFlt: Waiting for the link to come up... (%d->%d)\n", cPromiscBefore, VBOX_GET_PCOUNT(pIfNet)));
+                    Log(("YokeNetFlt: Waiting for the link to come up... (%d->%d)\n", cPromiscBefore, VBOX_GET_PCOUNT(pIfNet)));
                 if (err)
-                    LogRel(("VBoxNetFlt: Failed to put '%s' into promiscuous mode, err=%d (%d->%d)\n", pThis->szName, err, cPromiscBefore, VBOX_GET_PCOUNT(pIfNet)));
+                    LogRel(("YokeNetFlt: Failed to put '%s' into promiscuous mode, err=%d (%d->%d)\n", pThis->szName, err, cPromiscBefore, VBOX_GET_PCOUNT(pIfNet)));
             }
             else
             {
@@ -1134,7 +1134,7 @@ void vboxNetFltPortOsSetActive(PVBOXNETFLTINS pThis, bool fActive)
                 pThis->u.s.fSetPromiscuous = false;
 
                 fIf = ifnet_flags(pIfNet);
-                Log(("VBoxNetFlt: fIf=%#x; %d->%d\n", fIf, cPromiscBefore, VBOX_GET_PCOUNT(pIfNet)));
+                Log(("YokeNetFlt: fIf=%#x; %d->%d\n", fIf, cPromiscBefore, VBOX_GET_PCOUNT(pIfNet)));
             }
         }
 
