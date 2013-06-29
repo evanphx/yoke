@@ -27,34 +27,34 @@ endif
 # Targets.
 #
 ifdef VBOX_WITH_HARDENING
- PROGRAMS += VBoxHeadlessHardened
- DLLS += VBoxHeadless
+ PROGRAMS += YokeHeadlessHardened
+ DLLS += YokeHeadless
 else
- PROGRAMS += VBoxHeadless
+ PROGRAMS += YokeHeadless
 endif
 
 
 #
-# Hardened VBoxHeadless.
+# Hardened YokeHeadless.
 #
-VBoxHeadlessHardened_TEMPLATE = VBOXR3HARDENEDEXE
-VBoxHeadlessHardened_SOURCES = VBoxHeadlessHardened.cpp
-VBoxHeadlessHardened_NAME = VBoxHeadless
+YokeHeadlessHardened_TEMPLATE = VBOXR3HARDENEDEXE
+YokeHeadlessHardened_SOURCES = VBoxHeadlessHardened.cpp
+YokeHeadlessHardened_NAME = VBoxHeadless
 
 
 #
-# VBoxHeadless
+# YokeHeadless
 #
-VBoxHeadless_TEMPLATE  := $(if $(VBOX_WITH_HARDENING),VBOXMAINCLIENTDLL,VBOXMAINCLIENTEXE)
-VBoxHeadless_DEFS      += \
+YokeHeadless_TEMPLATE  := $(if $(VBOX_WITH_HARDENING),VBOXMAINCLIENTDLL,VBOXMAINCLIENTEXE)
+YokeHeadless_DEFS      += \
                  VBOX_WITH_VIDEO_REC 
-VBoxHeadless_SOURCES    = VBoxHeadless.cpp
-VBoxHeadless_SOURCES  += Framebuffer.cpp
+YokeHeadless_SOURCES    = VBoxHeadless.cpp
+YokeHeadless_SOURCES  += Framebuffer.cpp
 ifdef VBOX_WITH_GUEST_PROPS
- VBoxHeadless_DEFS     += VBOX_WITH_GUEST_PROPS
+ YokeHeadless_DEFS     += VBOX_WITH_GUEST_PROPS
 endif
 ifdef VBOX_WITH_HARDENING
- VBoxHeadless_LDFLAGS.darwin += -install_name $(VBOX_DYLD_EXECUTABLE_PATH)/VBoxHeadless.dylib
+ YokeHeadless_LDFLAGS.darwin += -install_name $(VBOX_DYLD_EXECUTABLE_PATH)/YokeHeadless.dylib
 endif
 
 include $(FILE_KBUILD_SUB_FOOTER)

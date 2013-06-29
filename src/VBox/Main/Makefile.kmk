@@ -193,7 +193,7 @@ ifndef VBOX_ONLY_SDK # Note this goes on for *very* long
 
 #
 # Generate SchemaDefs.h and SchemaDefs.cpp from XML Schema
-# These two files are used by both VBoxC and VBoxSVC.
+# These two files are used by both VBoxC and YokeSVC.
 #
 BLDDIRS += $(PATH_TARGET)/Main
 VBOX_XML_SCHEMADEFS_H   = $(PATH_TARGET)/Main/SchemaDefs.h
@@ -207,11 +207,11 @@ testschemadefs: $(VBOX_XML_SCHEMADEFS_H) $(VBOX_XML_SCHEMADEFS_CPP)
 
 
 #
-# VBoxSVC executable
+# YokeSVC executable
 #
-PROGRAMS += VBoxSVC
-VBoxSVC_TEMPLATE = VBOXMAINEXE
-VBoxSVC_DEFS = \
+PROGRAMS += YokeSVC
+YokeSVC_TEMPLATE = VBOXMAINEXE
+YokeSVC_DEFS = \
 	VBOX_MAIN_SETTINGS_ADDONS \
 	IN_VMM_STATIC \
 	$(VBOX_MAIN_DEFS) \
@@ -239,49 +239,49 @@ VBoxSVC_DEFS = \
 	$(if $(VBOX_WITH_S3),VBOX_WITH_S3,) \
 	$(if $(VBOX_WITH_PCI_PASSTHROUGH),VBOX_WITH_PCI_PASSTHROUGH,)
 ifdef VBOX_WITH_USB
- VBoxSVC_DEFS += \
+ YokeSVC_DEFS += \
 	VBOX_WITH_USB \
 	$(if $(VBOX_WITH_EHCI),VBOX_WITH_EHCI,) \
 	$(if $(VBOX_WITH_NEW_USB_CODE_ON_DARWIN),VBOX_WITH_NEW_USB_CODE_ON_DARWIN,)
 endif
-VBoxSVC_DEFS.win += VBOX_COM_OUTOFPROC_MODULE
-VBoxSVC_DEFS.win += _WIN32_WINNT=0x0510
+YokeSVC_DEFS.win += VBOX_COM_OUTOFPROC_MODULE
+YokeSVC_DEFS.win += _WIN32_WINNT=0x0510
 # Try to load and use libhal at runtime for probing removable media
-# VBoxSVC_DEFS.linux += VBOX_USE_LIBHAL
-VBoxSVC_DEFS.solaris += VBOX_USE_LIBHAL
-VBoxSVC_DEFS.freebsd += VBOX_USE_LIBHAL
+# YokeSVC_DEFS.linux += VBOX_USE_LIBHAL
+YokeSVC_DEFS.solaris += VBOX_USE_LIBHAL
+YokeSVC_DEFS.freebsd += VBOX_USE_LIBHAL
 
-VBoxSVC_CXXFLAGS = $(filter-out -Wno-unused,$(TEMPLATE_VBOXMAINEXE_CXXFLAGS))
+YokeSVC_CXXFLAGS = $(filter-out -Wno-unused,$(TEMPLATE_VBOXMAINEXE_CXXFLAGS))
 
-VBoxSVC_INCS = \
+YokeSVC_INCS = \
 	include \
-	$(VBoxSVC_0_OUTDIR) \
+	$(YokeSVC_0_OUTDIR) \
 	$(dir $(VBOX_XML_SCHEMADEFS_H)) \
 	.
-VBoxSVC_INCS.win = \
+YokeSVC_INCS.win = \
 	$(VBoxCOM_0_OUTDIR)
 ifdef VBOX_WITH_USB
- VBoxSVC_INCS.os2 = \
+ YokeSVC_INCS.os2 = \
 	$(PATH_ROOT)/src/VBox/HostDrivers/VBoxUSB/os2
 endif
 
-VBoxSVC_LIBS += \
+YokeSVC_LIBS += \
 	$(PATH_STAGE_LIB)/SSMStandalone$(VBOX_SUFF_LIB) \
 	$(LIB_DDU)
-VBoxSVC_SDKS = VBOX_LIBPNG VBOX_ZLIB
-VBoxSVC_LIBS.solaris = \
+YokeSVC_SDKS = VBOX_LIBPNG VBOX_ZLIB
+YokeSVC_LIBS.solaris = \
 	adm \
 	nsl \
 	devinfo \
 	socket \
 	$(LIB_VMM)
 
-VBoxSVC_INTERMEDIATES = \
+YokeSVC_INTERMEDIATES = \
 	$(VBOX_MAIN_PREREQS) \
 	$(VBOX_XML_SCHEMADEFS_H) \
 	$(VBOX_AUTOGEN_EVENT_H)
 
-VBoxSVC_SOURCES = \
+YokeSVC_SOURCES = \
 	src-all/DisplayPNGUtil.cpp \
 	src-all/DisplayResampleImage.cpp \
 	src-all/DisplayUtils.cpp \
@@ -336,25 +336,25 @@ VBoxSVC_SOURCES = \
 	$(VBOX_AUTOGEN_EVENT_CPP) \
 	$(if $(VBOX_WITH_XPCOM),src-server/xpcom/server.cpp,)
 
-VBoxSVC_SOURCES.darwin = \
+YokeSVC_SOURCES.darwin = \
 	src-server/darwin/iokit.cpp \
 	src-server/darwin/HostPowerDarwin.cpp
 
-VBoxSVC_SOURCES.win = \
+YokeSVC_SOURCES.win = \
 	src-server/win/svcmain.cpp \
 	src-server/win/svchlp.cpp \
 	src-server/win/HostPowerWin.cpp \
 	src-server/win/VBoxSVC.rc \
 	src-server/win/VBoxComEvents.cpp
 
-VBoxSVC_SOURCES.linux = \
+YokeSVC_SOURCES.linux = \
 	src-server/linux/HostHardwareLinux.cpp
 
-VBoxSVC_SOURCES.solaris = \
+YokeSVC_SOURCES.solaris = \
 	src-server/linux/vbox-libhal.cpp \
 	src-server/solaris/DynLoadLibSolaris.cpp
 
-VBoxSVC_SOURCES.freebsd = \
+YokeSVC_SOURCES.freebsd = \
 	src-server/freebsd/HostHardwareFreeBSD.cpp
 
 
@@ -362,79 +362,79 @@ ifdef VBOX_WITH_USB
  ifdef VBOX_WITH_SYSFS_BY_DEFAULT
   src-server/linux/USBProxyServiceLinux.cpp_DEFS += VBOX_WITH_SYSFS_BY_DEFAULT
  endif
- VBoxSVC_SOURCES  += \
+ YokeSVC_SOURCES  += \
 	src-server/USBDeviceFilterImpl.cpp \
 	src-server/USBProxyService.cpp \
 	src-server/HostUSBDeviceImpl.cpp
- VBoxSVC_SOURCES.darwin  +=  src-server/darwin/USBProxyServiceDarwin.cpp
- VBoxSVC_SOURCES.linux   +=   src-server/linux/USBProxyServiceLinux.cpp
- VBoxSVC_SOURCES.linux   +=   src-server/linux/USBGetDevices.cpp
- VBoxSVC_SOURCES.os2     +=     src-server/os2/USBProxyServiceOs2.cpp
- VBoxSVC_SOURCES.solaris += src-server/solaris/USBProxyServiceSolaris.cpp
- VBoxSVC_SOURCES.win     +=     src-server/win/USBProxyServiceWindows.cpp
- VBoxSVC_SOURCES.freebsd += src-server/freebsd/USBProxyServiceFreeBSD.cpp
+ YokeSVC_SOURCES.darwin  +=  src-server/darwin/USBProxyServiceDarwin.cpp
+ YokeSVC_SOURCES.linux   +=   src-server/linux/USBProxyServiceLinux.cpp
+ YokeSVC_SOURCES.linux   +=   src-server/linux/USBGetDevices.cpp
+ YokeSVC_SOURCES.os2     +=     src-server/os2/USBProxyServiceOs2.cpp
+ YokeSVC_SOURCES.solaris += src-server/solaris/USBProxyServiceSolaris.cpp
+ YokeSVC_SOURCES.win     +=     src-server/win/USBProxyServiceWindows.cpp
+ YokeSVC_SOURCES.freebsd += src-server/freebsd/USBProxyServiceFreeBSD.cpp
 endif
 
 ifdef VBOX_WITH_NETFLT
- VBoxSVC_LIBS.win += \
+ YokeSVC_LIBS.win += \
 	$(PATH_STAGE_LIB)/WinNetConfig$(VBOX_SUFF_LIB) \
 	$(PATH_STAGE_LIB)/VBoxDrvCfg$(VBOX_SUFF_LIB) \
 	$(PATH_SDK_$(VBOX_WINDDK)_LIB)/Newdev.lib \
 	$(PATH_TOOL_$(VBOX_VCC_TOOL)_LIB)/comsupp.lib \
 	$(PATH_SDK_$(VBOX_WINPSDK)_LIB)/WbemUuid.Lib
 endif
-VBoxSVC_LDFLAGS.darwin    = -framework IOKit -framework SystemConfiguration
+YokeSVC_LDFLAGS.darwin    = -framework IOKit -framework SystemConfiguration
 
 ifdef VBOX_WITH_CROGL
- VBoxSVC_LIBS += $(PATH_STAGE_LIB)/VBoxOGLTest$(VBOX_SUFF_LIB)
- VBoxSVC_LDFLAGS.darwin += -framework OpenGL
+ YokeSVC_LIBS += $(PATH_STAGE_LIB)/VBoxOGLTest$(VBOX_SUFF_LIB)
+ YokeSVC_LDFLAGS.darwin += -framework OpenGL
 endif
 
 ifeq ($(KBUILD_TYPE),debug)
- VBoxSVC_LDFLAGS.linux   += -rdynamic # for backtrace_symbols()
+ YokeSVC_LDFLAGS.linux   += -rdynamic # for backtrace_symbols()
 endif
 
 ifdef VBOX_WITH_RESOURCE_USAGE_API
- VBoxSVC_SOURCES += \
+ YokeSVC_SOURCES += \
 	src-server/PerformanceImpl.cpp \
 	src-server/Performance.cpp
- VBoxSVC_SOURCES.darwin  +=  src-server/darwin/PerformanceDarwin.cpp
- VBoxSVC_SOURCES.freebsd += src-server/freebsd/PerformanceFreeBSD.cpp
- VBoxSVC_SOURCES.linux   +=   src-server/linux/PerformanceLinux.cpp
- VBoxSVC_SOURCES.os2     +=     src-server/os2/PerformanceOs2.cpp
- VBoxSVC_SOURCES.solaris += src-server/solaris/PerformanceSolaris.cpp
- VBoxSVC_SOURCES.win     +=     src-server/win/PerformanceWin.cpp
- VBoxSVC_LDFLAGS.darwin  += -lproc
- VBoxSVC_LDFLAGS.solaris += -lkstat -lnvpair
- VBoxSVC_LDFLAGS.win     += psapi.lib powrprof.lib
+ YokeSVC_SOURCES.darwin  +=  src-server/darwin/PerformanceDarwin.cpp
+ YokeSVC_SOURCES.freebsd += src-server/freebsd/PerformanceFreeBSD.cpp
+ YokeSVC_SOURCES.linux   +=   src-server/linux/PerformanceLinux.cpp
+ YokeSVC_SOURCES.os2     +=     src-server/os2/PerformanceOs2.cpp
+ YokeSVC_SOURCES.solaris += src-server/solaris/PerformanceSolaris.cpp
+ YokeSVC_SOURCES.win     +=     src-server/win/PerformanceWin.cpp
+ YokeSVC_LDFLAGS.darwin  += -lproc
+ YokeSVC_LDFLAGS.solaris += -lkstat -lnvpair
+ YokeSVC_LDFLAGS.win     += psapi.lib powrprof.lib
 endif
 
 ifdef VBOX_WITH_HOSTNETIF_API
- VBoxSVC_SOURCES.win     +=     src-server/win/NetIf-win.cpp
- VBoxSVC_SOURCES.linux   +=   src-server/linux/NetIf-linux.cpp
- VBoxSVC_SOURCES.os2     +=     src-server/os2/NetIf-os2.cpp
- VBoxSVC_SOURCES.darwin  +=  src-server/darwin/NetIf-darwin.cpp
- VBoxSVC_SOURCES.solaris += src-server/solaris/NetIf-solaris.cpp
- VBoxSVC_SOURCES.freebsd += src-server/freebsd/NetIf-freebsd.cpp
- VBoxSVC_DEFS            += VBOX_WITH_HOSTNETIF_API
+ YokeSVC_SOURCES.win     +=     src-server/win/NetIf-win.cpp
+ YokeSVC_SOURCES.linux   +=   src-server/linux/NetIf-linux.cpp
+ YokeSVC_SOURCES.os2     +=     src-server/os2/NetIf-os2.cpp
+ YokeSVC_SOURCES.darwin  +=  src-server/darwin/NetIf-darwin.cpp
+ YokeSVC_SOURCES.solaris += src-server/solaris/NetIf-solaris.cpp
+ YokeSVC_SOURCES.freebsd += src-server/freebsd/NetIf-freebsd.cpp
+ YokeSVC_DEFS            += VBOX_WITH_HOSTNETIF_API
  if1of ($(KBUILD_TARGET), linux darwin solaris freebsd)
-  VBoxSVC_SOURCES        += src-server/generic/NetIf-generic.cpp
+  YokeSVC_SOURCES        += src-server/generic/NetIf-generic.cpp
  endif
 endif
 
-src-server/win/VBoxSVC.rc_INCS  = $(VBoxSVC_0_OUTDIR)
-src-server/win/VBoxSVC.rc_DEPS  = $(VBoxSVC_0_OUTDIR)/VBoxSVC.rgs $(VBoxSVC_0_OUTDIR)/VBoxSVC-icon.rc
-src-server/win/VBoxSVC.rc_CLEAN = $(VBoxSVC_0_OUTDIR)/VBoxSVC.rgs $(VBoxSVC_0_OUTDIR)/VBoxSVC-icon.rc
+src-server/win/VBoxSVC.rc_INCS  = $(YokeSVC_0_OUTDIR)
+src-server/win/VBoxSVC.rc_DEPS  = $(YokeSVC_0_OUTDIR)/VBoxSVC.rgs $(YokeSVC_0_OUTDIR)/VBoxSVC-icon.rc
+src-server/win/VBoxSVC.rc_CLEAN = $(YokeSVC_0_OUTDIR)/VBoxSVC.rgs $(YokeSVC_0_OUTDIR)/VBoxSVC-icon.rc
 
-$$(VBoxSVC_0_OUTDIR)/VBoxSVC-icon.rc: $(MAKEFILE_CURRENT) $(VBOX_WINDOWS_ICON_FILE) | $$(dir $$(@D))
+$$(YokeSVC_0_OUTDIR)/VBoxSVC-icon.rc: $(MAKEFILE_CURRENT) $(VBOX_WINDOWS_ICON_FILE) | $$(dir $$(@D))
 	$(APPEND) -t $@ '1 ICON DISCARDABLE "$(subst /,\\,$(VBOX_WINDOWS_ICON_FILE))"'
 
-$$(VBoxSVC_0_OUTDIR)/VBoxSVC.rgs: $(VBOX_PATH_MAIN_SRC)/src-all/win/VirtualBox_rgs.xsl $(VBOX_XIDL_FILE) | $$(dir $$(@D))
-	$(VBOX_XSLTPROC) --stringparam Module VBoxSVC -o $@ $< $(VBOX_XIDL_FILE)
+$$(YokeSVC_0_OUTDIR)/VBoxSVC.rgs: $(VBOX_PATH_MAIN_SRC)/src-all/win/VirtualBox_rgs.xsl $(VBOX_XIDL_FILE) | $$(dir $$(@D))
+	$(VBOX_XSLTPROC) --stringparam Module YokeSVC -o $@ $< $(VBOX_XIDL_FILE)
 
 
 #
-# Embed XML Schema files to VBoxSVC
+# Embed XML Schema files to YokeSVC
 #
 VBOX_XML_SCHEMA_COMMON        = $(VBOX_PATH_MAIN_SRC)/xml/VirtualBox-settings-common.xsd
 VBOX_XML_SCHEMA.darwin        = $(VBOX_PATH_MAIN_SRC)/xml/VirtualBox-settings-macosx.xsd
@@ -446,16 +446,16 @@ VBOX_XML_SCHEMA.solaris       = $(VBOX_PATH_MAIN_SRC)/xml/VirtualBox-settings-so
 
 VBOX_XML_CONVERTER_TEMPLATE   = $(VBOX_PATH_MAIN_SRC)/xml/SettingsConverter.xsl
 
-$$(VBoxSVC_0_OUTDIR)/xml_VirtualBox_settings_xsd.h: $(VBOX_XML_SCHEMA.$(KBUILD_TARGET)) $(VBOX_BIN2C)
-	$(call MSG_TOOL,bin2c,VBoxSVC,$<,$@)
+$$(YokeSVC_0_OUTDIR)/xml_VirtualBox_settings_xsd.h: $(VBOX_XML_SCHEMA.$(KBUILD_TARGET)) $(VBOX_BIN2C)
+	$(call MSG_TOOL,bin2c,YokeSVC,$<,$@)
 	$(QUIET)$(VBOX_BIN2C) _xml_VirtualBox_settings_xsd $< $@
 
-$$(VBoxSVC_0_OUTDIR)/xml_VirtualBox_settings_common_xsd.h: $(VBOX_XML_SCHEMA_COMMON) $(VBOX_BIN2C)
-	$(call MSG_TOOL,bin2c,VBoxSVC,$<,$@)
+$$(YokeSVC_0_OUTDIR)/xml_VirtualBox_settings_common_xsd.h: $(VBOX_XML_SCHEMA_COMMON) $(VBOX_BIN2C)
+	$(call MSG_TOOL,bin2c,YokeSVC,$<,$@)
 	$(QUIET)$(VBOX_BIN2C) _xml_VirtualBox_settings_common_xsd $< $@
 
-$$(VBoxSVC_0_OUTDIR)/xml_SettingsConverter_xsl.h: $(VBOX_XML_CONVERTER_TEMPLATE) $(VBOX_BIN2C)
-	$(call MSG_TOOL,bin2c,VBoxSVC,$<,$@)
+$$(YokeSVC_0_OUTDIR)/xml_SettingsConverter_xsl.h: $(VBOX_XML_CONVERTER_TEMPLATE) $(VBOX_BIN2C)
+	$(call MSG_TOOL,bin2c,YokeSVC,$<,$@)
 	$(QUIET)$(VBOX_BIN2C) _xml_SettingsConverter_xsl $< $@
 
 $(VBOX_XML_SCHEMADEFS_H): $(VBOX_XML_SCHEMADEFS_XSL) $(VBOX_XML_SCHEMA.$(KBUILD_TARGET)) $(VBOX_XML_SCHEMA_COMMON) | $$(dir $$@)
@@ -470,7 +470,7 @@ OTHER_CLEAN += $(VBOX_XML_SCHEMADEFS_H) $(VBOX_XML_SCHEMADEFS_CPP)
 
 
 #
-# Generate some event stuff for VBoxSVC and VBoxC.
+# Generate some event stuff for YokeSVC and VBoxC.
 #
 $(VBOX_AUTOGEN_EVENT_H): $(VBOX_PATH_MAIN_SRC)/idl/comimpl.xsl $(VBOX_XIDL_FILE) | $$(dir $$@)
 	$(call MSG_TOOL,xsltproc,autogen events,$<,$@)
@@ -484,32 +484,32 @@ OTHER_CLEAN += $(VBOX_AUTOGEN_EVENT_H) $(VBOX_AUTOGEN_EVENT_CPP)
 
 ifdef VBOX_WITH_XPCOM
 #
-# VBoxSVCM - VBoxSVC wrapper module
+# YokeSVCM - YokeSVC wrapper module
 #
-DLLS += VBoxSVCM
-VBoxSVCM_TEMPLATE       = VBOXMAINCOMP
-VBoxSVCM_DEFS           = IN_RING3 $(VBOX_MAIN_DEFS)
+DLLS += YokeSVCM
+YokeSVCM_TEMPLATE       = VBOXMAINCOMP
+YokeSVCM_DEFS           = IN_RING3 $(VBOX_MAIN_DEFS)
 ifdef VBOX_WITH_HARDENING
- VBoxSVCM_DEFS         += VBOX_WITH_HARDENING
+ YokeSVCM_DEFS         += VBOX_WITH_HARDENING
 endif
-VBoxSVCM_INCS           = \
+YokeSVCM_INCS           = \
 	include \
 	$(VBoxC_0_OUTDIR) \
 	.
-VBoxSVCM_INTERMEDIATES  = $(VBOX_MAIN_PREREQS)
-VBoxSVCM_SOURCES        = \
+YokeSVCM_INTERMEDIATES  = $(VBOX_MAIN_PREREQS)
+YokeSVCM_SOURCES        = \
 	src-server/xpcom/server_module.cpp
-VBoxSVCM_LDFLAGS.darwin = \
-	-install_name $(VBOX_DYLD_EXECUTABLE_PATH)/components/VBoxSVCM.dylib \
-	-exported_symbols_list $(VBoxSVCM_0_OUTDIR)/VBoxSVCM.def
+YokeSVCM_LDFLAGS.darwin = \
+	-install_name $(VBOX_DYLD_EXECUTABLE_PATH)/components/YokeSVCM.dylib \
+	-exported_symbols_list $(YokeSVCM_0_OUTDIR)/YokeSVCM.def
  ifeq ($(KBUILD_TARGET),darwin)
-VBoxSVCM_ORDERDEPS     += $(VBoxSVCM_0_OUTDIR)/VBoxSVCM.def
-VBoxSVCM_CLEAN         += $(VBoxSVCM_0_OUTDIR)/VBoxSVCM.def
-$$(VBoxSVCM_0_OUTDIR)/VBoxSVCM.def:
+YokeSVCM_ORDERDEPS     += $(YokeSVCM_0_OUTDIR)/YokeSVCM.def
+YokeSVCM_CLEAN         += $(YokeSVCM_0_OUTDIR)/YokeSVCM.def
+$$(YokeSVCM_0_OUTDIR)/YokeSVCM.def:
 	$(RM) -f $@
 	$(APPEND) $@ _NSGetModule
  endif
-VBoxSVCM_INTERMEDIATES += $(VBOX_IDL_HEADER.XPCOM)
+YokeSVCM_INTERMEDIATES += $(VBOX_IDL_HEADER.XPCOM)
 endif # VBOX_WITH_XPCOM
 
 
@@ -790,21 +790,21 @@ include $(FILE_KBUILD_SUB_FOOTER)
 glue/xpcom/helpers.cpp: $(VBOX_IDL_TYPELIB.XPCOM)
 
 $(VBOX_IDL_FILE.XPCOM): $(VBOX_PATH_MAIN_SRC)/idl/xpidl.xsl $(VBOX_XIDL_FILE) | $$(dir $$@)
-	$(call MSG_TOOL,xsltproc,VBoxSVC,$<,$@)
+	$(call MSG_TOOL,xsltproc,YokeSVC,$<,$@)
 	$(QUIET)$(VBOX_XSLTPROC) -o $@ $< $(VBOX_XIDL_FILE)
 
 $(VBOX_IDL_TYPELIB.XPCOM): $(VBOX_IDL_FILE.XPCOM) |  $$(dir $$@) $(VBOX_XPIDL)
-	$(call MSG_TOOL,xpidl,VBoxSVC,$<,$@)
+	$(call MSG_TOOL,xpidl,YokeSVC,$<,$@)
 	$(QUIET)$(VBOX_XPIDL_ENV)$(VBOX_XPIDL) -m typelib -I $(VBOX_PATH_XPCOM_IDL) -e $@ $<
 	$(CHMOD) 0644 $@
 ## @todo ^^^^^^^^^^^^ fix horrible hack
 
 $(VBOX_IDL_HEADER.XPCOM): $(VBOX_IDL_FILE.XPCOM) | $$(dir $$@) $(VBOX_XPIDL)
-	$(call MSG_TOOL,xpidl,VBoxSVC,$<,$@)
+	$(call MSG_TOOL,xpidl,YokeSVC,$<,$@)
 	$(QUIET)$(VBOX_XPIDL_ENV)$(VBOX_XPIDL) -m header  -I $(VBOX_PATH_XPCOM_IDL) -e $@ $<
 
 $(VBOX_IDL_FILE.MSCOM): $(VBOX_PATH_MAIN_SRC)/idl/midl.xsl $(VBOX_XIDL_FILE) | $$(dir $$@)
-	$(call MSG_TOOL,xsltproc,VBoxSVC,$<,$@)
+	$(call MSG_TOOL,xsltproc,YokeSVC,$<,$@)
 	$(QUIET)$(VBOX_XSLTPROC) -o $@ $< $(VBOX_XIDL_FILE)
 
 # Aliases for testing purposes.
@@ -829,10 +829,10 @@ $(VBoxCOM_0_OUTDIR)/VirtualBox_i.c \
 #
 # Translation stuff
 #
-VBoxSVC_VBOX_HEADERS = \
+YokeSVC_VBOX_HEADERS = \
 	include/collection.h \
 	include/MachineImpl.h
-VBoxSVC_VBOX_TRANSLATIONS = \
+YokeSVC_VBOX_TRANSLATIONS = \
 	nls/VBoxSVC_de.ts
 
 VBoxC_VBOX_HEADERS = \
@@ -910,7 +910,7 @@ javagluesample_SOURCES = \
 	$(VBOX_PATH_MAIN_SRC)/glue/tests/Makefile=>Makefile
 
 updatenls::
-	$(VBOX_LUPDATE) $(VBoxSVC_SOURCES) $(VBoxSVC_VBOX_HEADERS) -ts $(VBoxSVC_VBOX_TRANSLATIONS)
+	$(VBOX_LUPDATE) $(YokeSVC_SOURCES) $(YokeSVC_VBOX_HEADERS) -ts $(YokeSVC_VBOX_TRANSLATIONS)
 	$(VBOX_LUPDATE) $(VBoxC_SOURCES) $(VBoxC_VBOX_HEADERS) -ts $(VBoxC_VBOX_TRANSLATIONS)
 
 testconverter:: $(VBOX_USER_HOME)/VirtualBox.xml

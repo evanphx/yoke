@@ -20,6 +20,6 @@
 
 int main(int argc, char **argv, char **envp)
 {
-    return SUPR3HardenedMain("VBoxHeadless", 0, argc, argv, envp);
+    return SUPR3HardenedMain("YokeHeadless", 0, argc, argv, envp);
 }
 

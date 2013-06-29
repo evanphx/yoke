@@ -7490,7 +7490,7 @@ HRESULT Machine::launchVMProcess(IInternalSessionControl *aControl,
          * Only if a VRDE has been installed and the VM enables it, the "headless" will work
          * differently in 4.0 and 3.x.
          */
-        const char VBoxHeadless_exe[] = "VBoxHeadless" HOSTSUFF_EXE;
+        const char VBoxHeadless_exe[] = "YokeHeadless" HOSTSUFF_EXE;
         Assert(sz >= sizeof(VBoxHeadless_exe));
         strcpy(cmd, VBoxHeadless_exe);
 
