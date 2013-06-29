@@ -370,7 +370,7 @@ HRESULT Initialize(bool fGui)
         "/opt/VirtualBox/amd64",
         "/opt/VirtualBox/i386",
 #elif RT_OS_DARWIN
-        "/Application/VirtualBox.app/Contents/MacOS",
+        "/Application/Yoke.app/Contents/MacOS",
 #endif
     };
 

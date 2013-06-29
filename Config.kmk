@@ -82,13 +82,13 @@ ifeq ($(KBUILD_TARGET),darwin)
  INST_SDK             = $(INST_DIST)sdk/
 
  # the bundles
- INST_VIRTUALBOX      = $(INST_DIST)VirtualBox.app/
+ INST_VIRTUALBOX      = $(INST_DIST)Yoke.app/
  INST_VBOXDRV         = $(INST_DIST)YokeDrv.kext/
  INST_VBOXNETFLT      = $(INST_DIST)YokeNetFlt.kext/
  INST_VBOXNETADP      = $(INST_DIST)YokeNetAdp.kext/
  INST_VBOXUSB         = $(INST_DIST)YokeUSB.kext/
 
- # put everything in the VirtualBox app bundle.
+ # put everything in the Yoke app bundle.
  INST_BIN             = $(INST_VIRTUALBOX)Contents/MacOS/
  INST_DLL             = $(INST_BIN)
  INST_SYS             = $(INST_BIN)
@@ -702,7 +702,7 @@ ifdef VBOX_WITH_HARDENING
  if1of ($(KBUILD_TARGET), linux solaris)
   VBOX_PATH_APP_PRIVATE      = /opt/VirtualBox
  else ifeq ($(KBUILD_TARGET),darwin)
-  VBOX_PATH_APP_PRIVATE      = /Applications/VirtualBox.app/Contents/MacOS
+  VBOX_PATH_APP_PRIVATE      = /Applications/Yoke.app/Contents/MacOS
  else ifeq ($(KBUILD_TARGET),freebsd)
   VBOX_PATH_APP_PRIVATE      = /usr/local/lib/virtualbox
  endif
@@ -2008,7 +2008,7 @@ ifeq ($(KBUILD_TARGET),darwin)
 endif # target=darwin
 
 #
-# Macro switching between @executable_path, @rpath and /Applications/VirtualBox.app
+# Macro switching between @executable_path, @rpath and /Applications/Yoke.app
 # depending on whether the build is hardened or not (dylib install_name).
 #
 ifeq ($(KBUILD_TARGET),darwin)

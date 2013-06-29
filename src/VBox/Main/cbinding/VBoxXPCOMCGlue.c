@@ -200,7 +200,7 @@ int VBoxCGlueInit(void)
     if (tryLoadOne("/opt/VirtualBox/i386", 1) == 0)
         return 0;
 #elif defined(__APPLE__)
-    if (tryLoadOne("/Application/VirtualBox.app/Contents/MacOS", 1) == 0)
+    if (tryLoadOne("/Application/Yoke.app/Contents/MacOS", 1) == 0)
         return 0;
 #elif defined(__FreeBSD__)
     if (tryLoadOne("/usr/local/lib/virtualbox", 1) == 0)
