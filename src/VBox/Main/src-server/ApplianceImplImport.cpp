@@ -2860,7 +2860,7 @@ void Appliance::importVBoxMachine(ComObjPtr<VirtualSystemDescription> &vsdescThi
          *
          */
 
-        if (strncmp(pStorage->pVDImageIfaces->pszInterfaceName, "Appliance::IOTar", strlen("Appliance::IOTar")) == 0)
+        if (pStorage && strncmp(pStorage->pVDImageIfaces->pszInterfaceName, "Appliance::IOTar", strlen("Appliance::IOTar")) == 0)
         {
             std::set<RTCString>::const_iterator h = disksResolvedNames.find(diCurrent.strHref);
             if (h != disksResolvedNames.end())

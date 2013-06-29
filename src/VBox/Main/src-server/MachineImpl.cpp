@@ -7441,7 +7441,7 @@ HRESULT Machine::launchVMProcess(IInternalSessionControl *aControl,
     if (strType == "gui" || strType == "GUI/Qt")
     {
 # ifdef RT_OS_DARWIN /* Avoid Launch Services confusing this with the selector by using a helper app. */
-        const char VirtualBox_exe[] = "../Resources/VirtualBoxVM.app/Contents/MacOS/VirtualBoxVM";
+        const char VirtualBox_exe[] = "../Resources/YokeVM.app/Contents/MacOS/YokeVM";
 # else
         const char VirtualBox_exe[] = "VirtualBox" HOSTSUFF_EXE;
 # endif

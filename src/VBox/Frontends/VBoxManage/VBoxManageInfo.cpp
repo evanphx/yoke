@@ -350,6 +350,8 @@ HRESULT showBandwidthGroups(ComPtr<IBandwidthControl> &bwCtrl,
 # pragma optimize("g", off)
 #endif
 
+#include <stdio.h>
+
 HRESULT showVMInfo(ComPtr<IVirtualBox> virtualBox,
                    ComPtr<IMachine> machine,
                    VMINFO_DETAILS details /*= VMINFO_NONE*/,

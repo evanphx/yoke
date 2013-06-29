@@ -394,10 +394,10 @@ HRESULT Host::init(VirtualBox *aParent)
     {
         Utf8Str strKey = aGlobalExtraDataKeys[i];
 
-        if (!strKey.startsWith("HostOnly/vboxnet"))
+        if (!strKey.startsWith("HostOnly/yokenet"))
             continue;
 
-        size_t pos = strKey.find("/", sizeof("HostOnly/vboxnet"));
+        size_t pos = strKey.find("/", sizeof("HostOnly/yokenet"));
         if (pos != Utf8Str::npos)
             aConfiguredNames.insert(strKey.substr(sizeof("HostOnly"),
                                                   pos - sizeof("HostOnly")));

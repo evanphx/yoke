@@ -380,7 +380,8 @@ typedef struct load_command
 #define LC_VERSION_MIN_MACOSX KU32_C(0x24)   /**< The image requires the given Mac OS X version. See version_min_command. */
 #define LC_VERSION_MIN_IPHONEOS KU32_C(0x25) /**< The image requires the given iOS version. See version_min_command. */
 #define LC_FUNCTION_STARTS  KU32_C(0x26)  /**< Where to find the compress function start addresses. See linkedit_data_command. */
-#define LC_DYLD_ENVIRONMENT KU32_C(0x26)  /**< Environment variable for the dynamic linker. See dylinker_command. */
+#define LC_DYLD_ENVIRONMENT KU32_C(0x27)  /**< Environment variable for the dynamic linker. See dylinker_command. */
+#define LC_DATA_IN_CODE KU32_C(0x29) /** ???? */
 /** @} */
 
 

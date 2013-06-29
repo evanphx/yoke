@@ -1338,7 +1338,7 @@ MainConfigFile::MainConfigFile(const Utf8Str *pstrFilename)
 #ifdef RT_OS_WINDOWS
             "HostInterfaceNetworking-VirtualBox Host-Only Ethernet Adapter";
 #else
-            "HostInterfaceNetworking-vboxnet0";
+            "HostInterfaceNetworking-yokenet0";
 #endif
         srv.strIPAddress = "192.168.56.100";
         srv.strIPNetworkMask = "255.255.255.0";

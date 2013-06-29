@@ -236,6 +236,7 @@ static int  kldrModMachODoImports(PKLDRMODMACHO pModMachO, void *pvMapping, PFNK
  * @param   offNewHdr       The offset of the new header in MZ files. -1 if not found.
  * @param   ppMod           Where to store the module instance pointer.
  */
+
 static int kldrModMachOCreate(PCKLDRMODOPS pOps, PKRDR pRdr, KU32 fFlags, KCPUARCH enmCpuArch, KLDRFOFF offNewHdr, PPKLDRMOD ppMod)
 {
     PKLDRMODMACHO pModMachO;
@@ -967,6 +968,8 @@ static int  kldrModMachOPreParseLoadCommands(KU8 *pbLoadCommands, const mach_hea
             }
 
             case LC_DYSYMTAB:
+	    case LC_FUNCTION_STARTS:
+	    case LC_DATA_IN_CODE:
                 /** @todo deal with this! */
                 break;
 

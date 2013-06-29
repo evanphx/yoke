@@ -230,7 +230,7 @@ int NetIfList(std::list <ComObjPtr<HostNetworkInterface> > &list)
                     IfObj.createObject();
 
                     HostNetworkInterfaceType_T enmType;
-                    if (strncmp("vboxnet", pszName, 7))
+                    if (strncmp("yokenet", pszName, 7))
                         enmType = HostNetworkInterfaceType_Bridged;
                     else
                         enmType = HostNetworkInterfaceType_HostOnly;

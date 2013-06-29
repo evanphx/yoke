@@ -401,7 +401,7 @@ int NetIfList(std::list <ComObjPtr<HostNetworkInterface> > &list)
                 pNew->enmStatus = (IfReq.ifr_flags & IFF_UP) ? NETIF_S_UP : NETIF_S_DOWN;
 
             HostNetworkInterfaceType_T enmType;
-            if (strncmp("vboxnet", pNew->szName, 7))
+            if (strncmp("yokenet", pNew->szName, 7))
                 enmType = HostNetworkInterfaceType_Bridged;
             else
                 enmType = HostNetworkInterfaceType_HostOnly;

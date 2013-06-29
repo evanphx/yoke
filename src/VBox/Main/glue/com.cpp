@@ -55,9 +55,9 @@
 #include <VBox/version.h>
 
 #ifdef RT_OS_DARWIN
-# define VBOX_USER_HOME_SUFFIX   "Library/VirtualBox"
+# define VBOX_USER_HOME_SUFFIX   "Library/Yoke"
 #else
-# define VBOX_USER_HOME_SUFFIX   ".VirtualBox"
+# define VBOX_USER_HOME_SUFFIX   ".Yoke"
 #endif
 
 #include "Logging.h"

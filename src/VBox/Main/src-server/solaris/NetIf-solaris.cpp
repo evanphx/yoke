@@ -168,7 +168,7 @@ static void vboxSolarisAddHostIface(char *pszIface, int Instance, void *pvHostNe
         SolarisNICMap.insert(NICPair("sfe", "SiS900 Fast Ethernet"));
         SolarisNICMap.insert(NICPair("skge", "SksKonnect Gigabit Ethernet"));
         SolarisNICMap.insert(NICPair("spwr", "SMC EtherPower II 10/100 (9432) Ethernet"));
-        SolarisNICMap.insert(NICPair("vboxnet", "VirtualBox Host Ethernet"));
+        SolarisNICMap.insert(NICPair("yokenet", "Yoke Host Ethernet"));
         SolarisNICMap.insert(NICPair("vboxvnic_template", "VirtualBox Virtual Network Interface Template"));
         SolarisNICMap.insert(NICPair("vlan", "Virtual LAN Ethernet"));
         SolarisNICMap.insert(NICPair("vr", "VIA Rhine Fast Ethernet"));
@@ -275,7 +275,7 @@ static void vboxSolarisAddHostIface(char *pszIface, int Instance, void *pvHostNe
     strncpy(Info.szShortName, szNICInstance, sizeof(Info.szShortName) - 1);
 
     HostNetworkInterfaceType_T enmType;
-    if (strncmp("vboxnet", szNICInstance, 7))
+    if (strncmp("yokenet", szNICInstance, 7))
         enmType = HostNetworkInterfaceType_Bridged;
     else
         enmType = HostNetworkInterfaceType_HostOnly;
