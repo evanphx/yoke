@@ -54,22 +54,73 @@ static void free_bounce_buffer(void *tmp)
     kfree (tmp);
 }
 
+#define FAST_IO 1
+
+struct FastIORead {
+  uint32_t root;
+  uint64_t handle;
+  uint64_t offset;
+  uint32_t count;
+  uint8_t* buffer;
+};
+
+static int write_req(void* req) {
+  RTCCPHYS physaddr;
+  int rc = vbglR0Enter();
+
+  if(RT_FAILURE(rc)) return -EPROTO;
+
+  physaddr = VbglPhysHeapGetPhysAddr(req);
+
+  if(!physaddr || (physaddr >> 32) != 0) { /* Port IO is 32 bit. */
+    if(RT_FAILURE(rc)) return -EPROTO;
+  } else {
+    ASMOutU32(g_vbgldata.portVMMDev + VMMDEV_PORT_OFF_REQUEST + 1,
+        (uint32_t)physaddr);
+    /* Make the compiler aware that the host has changed memory. */
+    ASMCompilerBarrier();
+  }
+
+  return 0;
+}
 
 /* fops */
 static int sf_reg_read_aux(const char *caller, struct sf_glob_info *sf_g,
                            struct sf_reg_info *sf_r, void *buf,
                            uint32_t *nread, uint64_t pos)
 {
+    int rc;
     /** @todo bird: yes, kmap() and kmalloc() input only. Since the buffer is
      *        contiguous in physical memory (kmalloc or single page), we should
      *        use a physical address here to speed things up. */
-    int rc = vboxCallRead(&client_handle, &sf_g->map, sf_r->handle,
+
+#ifdef FAST_IO
+    struct FastIORead req;
+    RTCCPHYS physaddr;
+
+    req.root = sf_g->map.root;
+    req.handle = sf_r->handle;
+    req.offset = pos;
+    req.count = *nread;
+    req.buffer = buf;
+
+    rc = write_req(&req);
+    if(!rc) return rc;
+
+    if(req.buffer != buf) return -EPROTO;
+
+    return 0;
+#else
+
+    rc = vboxCallRead(&client_handle, &sf_g->map, sf_r->handle,
                           pos, nread, buf, false /* already locked? */);
     if (RT_FAILURE(rc))
     {
         LogFunc(("vboxCallRead failed. caller=%s, rc=%Rrc\n", caller, rc));
         return -EPROTO;
     }
+#endif
+
     return 0;
 }
 
@@ -266,6 +317,14 @@ fail:
     return err;
 }
 
+struct FastIOOpen {
+  uint32_t root;
+  uint8_t* path;
+  uint32_t path_len;
+  uint32_t flags;
+  uint64_t handle;
+};
+
 /**
  * Open a regular file.
  *
@@ -310,6 +369,35 @@ static int sf_reg_open(struct inode *inode, struct file *file)
         return 0;
     }
 
+#ifdef FAST_IO
+    req.root = sf_g->map.root;
+    req.path = sf_i->path;
+    req.path_len = ShflStringSizeOfBuffer(req.path);
+    req.flags = 0;
+
+    if(file->f_flags & O_CREAT)  req.flags |= FIO_CREATE;
+    if(file->f_flags & O_TRUNC)  req.flags |= FIO_TRUNC;
+    if(file->f_flags & O_APPEND) req.flags |= FIO_APPEND;
+
+    /* req.acc_mode = file->f_flags & O_ACCMODE; */
+
+    write_req(&req);
+
+    sf_i->force_restat = 1;
+    sf_r->handle = req.handle;
+    sf_i->file = file;
+    file->private_data = sf_r;
+
+    switch(req.flags) {
+    default:
+    case 0:
+      return 0;
+    case FIO_ENOENT:
+      return -ENOENT;
+    case FIO_EEXIST:
+      return -EEXIST;
+    }
+#else
     RT_ZERO(params);
     params.Handle = SHFL_HANDLE_NIL;
     /* We check the value of params.Handle afterwards to find out if
@@ -405,6 +493,7 @@ static int sf_reg_open(struct inode *inode, struct file *file)
     sf_i->file = file;
     file->private_data = sf_r;
     return rc_linux;
+#endif
 }
 
 /**

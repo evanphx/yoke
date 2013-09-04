@@ -1650,7 +1650,7 @@ typedef struct
 AssertCompileSize(HGCMFunctionParameter64, 4+12);
 
 /* Redefine the structure type for the guest code. */
-#  ifndef VBOX_HGCM_HOST_CODE
+// #  ifndef VBOX_HGCM_HOST_CODE
 #   if ARCH_BITS == 64
 #     define HGCMFunctionParameter  HGCMFunctionParameter64
 #   elif ARCH_BITS == 32
@@ -1658,7 +1658,7 @@ AssertCompileSize(HGCMFunctionParameter64, 4+12);
 #   else
 #    error "Unsupported sizeof (void *)"
 #   endif
-#  endif /* !VBOX_HGCM_HOST_CODE */
+// #  endif [> !VBOX_HGCM_HOST_CODE <]
 
 # else /* !VBOX_WITH_64_BITS_GUESTS */
 

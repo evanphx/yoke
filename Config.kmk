@@ -1637,6 +1637,7 @@ ifeq ($(KBUILD_TARGET),darwin)
  LIB_REM         = $(PATH_STAGE_LIB)/VBoxREM.dylib
  LIB_XPCOM       = $(PATH_STAGE_BIN)/VBoxXPCOM.dylib
  LIB_DDU         = $(PATH_STAGE_BIN)/VBoxDDU.dylib
+ LIB_DD          = $(PATH_STAGE_BIN)/VBoxDD.dylib
 endif
 ifeq ($(KBUILD_TARGET),l4)
  LIB_RUNTIME     = $(PATH_STAGE_BIN)/VBoxRT.s.so
@@ -1647,6 +1648,7 @@ ifeq ($(KBUILD_TARGET),l4)
  LIB_REM         = $(PATH_STAGE_LIB)/VBoxREM.s.so
  LIB_XPCOM       = $(PATH_STAGE_BIN)/VBoxXPCOM.s.so
  LIB_DDU         = $(PATH_STAGE_BIN)/VBoxDDU.s.so
+ LIB_DD          = $(PATH_STAGE_BIN)/VBoxDD.s.so
 endif
 if1of ($(KBUILD_TARGET), freebsd linux netbsd openbsd solaris)
  LIB_RUNTIME     = $(PATH_STAGE_BIN)/VBoxRT.so
@@ -1657,6 +1659,7 @@ if1of ($(KBUILD_TARGET), freebsd linux netbsd openbsd solaris)
  LIB_REM         = $(PATH_STAGE_LIB)/VBoxREM.so
  LIB_XPCOM       = $(PATH_STAGE_BIN)/VBoxXPCOM.so
  LIB_DDU         = $(PATH_STAGE_BIN)/VBoxDDU.so
+ LIB_DD          = $(PATH_STAGE_BIN)/VBoxDD.so
 endif
 ifeq ($(KBUILD_TARGET),os2)
  LIB_RUNTIME     = $(PATH_STAGE_BIN)/VBoxRT.dll

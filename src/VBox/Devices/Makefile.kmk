@@ -203,7 +203,10 @@ if !defined(VBOX_ONLY_EXTPACKS)         # Goes on almost to the end of the file.
  	Storage/Debug.cpp \
  	Storage/DrvVD.cpp \
  	Network/DrvNetSniffer.cpp \
- 	Network/Pcap.cpp
+ 	Network/Pcap.cpp \
+	../HostServices/SharedFolders/vbsf.cpp \
+	../HostServices/SharedFolders/mappings.cpp \
+	../HostServices/SharedFolders/shflhandle.cpp
  VBoxDD_LIBS             = # more later.
  VBoxDD_LDFLAGS.darwin   = -install_name $(VBOX_DYLD_EXECUTABLE_PATH)/VBoxDD.dylib \
  	-framework CoreAudio \

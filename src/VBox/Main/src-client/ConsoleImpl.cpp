@@ -7346,6 +7346,8 @@ bool Console::findOtherSharedFolder(const Utf8Str &strName,
     return false;
 }
 
+extern "C" int yokeFastIOMappingsAdd(SHFLSTRING* pFolderName, SHFLSTRING* pMapName,
+                    bool fWritable, bool fAutoMount, bool fSymlinksCreate, bool fMissing);
 /**
  * Calls the HGCM service to add a shared folder definition.
  *
@@ -7443,6 +7445,10 @@ HRESULT Console::createSharedFolder(const Utf8Str &strName, const SharedFolderDa
     vrc = m_pVMMDev->hgcmHostCall("VBoxSharedFolders",
                                   SHFL_FN_ADD_MAPPING,
                                   SHFL_CPARMS_ADD_MAPPING, &parms[0]);
+
+    yokeFastIOMappingsAdd(pFolderName, pMapName,
+            aData.m_fWritable, aData.m_fAutoMount, fSymlinksCreate, fMissing);
+
     RTMemFree(pFolderName);
     RTMemFree(pMapName);
 

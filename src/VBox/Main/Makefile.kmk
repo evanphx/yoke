@@ -570,6 +570,7 @@ VBoxC_LDFLAGS.win += /DELAYLOAD:VBoxVMM.dll /MANIFEST
 
 VBoxC_LIBS += \
 	$(LIB_VMM) \
+	$(LIB_DD) \
 	$(LIB_REM)
 
 ifdef VBOX_WITH_NETFLT

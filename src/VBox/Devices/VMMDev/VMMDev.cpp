@@ -35,6 +35,7 @@
 #include <VBox/vmm/vm.h> /* for VM_IS_EMT */
 #include <VBox/dbg.h>
 #include <VBox/version.h>
+#include <Yoke/fast_io.h>
 
 #include <iprt/asm.h>
 #include <iprt/asm-amd64-x86.h>
@@ -57,6 +58,8 @@
 # include "VMMDevTesting.h"
 #endif
 
+#include "../../HostServices/SharedFolders/mappings.h"
+#include "../../HostServices/SharedFolders/vbsf.h"
 
 /*******************************************************************************
 *   Defined Constants And Macros                                               *
@@ -798,6 +801,64 @@ static int vmmdevReqHandler_DebugIsPageShared(PPDMDEVINS pDevIns, VMMDevPageIsSh
 
 #endif /* VBOX_WITH_PAGE_SHARING */
 
+#define FAST_IO
+
+#ifdef FAST_IO
+
+static DECLCALLBACK(int) vmmdevFastIORead(PPDMDEVINS pDevIns, void *pvUser, RTIOPORT Port, uint32_t u32, unsigned cb) {
+
+  FastIORead req;
+
+  PDMDevHlpPhysRead(pDevIns, (RTGCPHYS)u32, &req, sizeof(req));
+
+  /* Fetch parameters. */ 
+  const uint32_t root    = req.root;
+  const uint64_t Handle  = req.handle;
+  const uint64_t   offset  = req.offset;
+  uint32_t   count   = req.count;
+  uint8_t* const pBuffer = req.buffer;
+  
+  int rc = vbsfRead(0, root, Handle, offset, &count, pBuffer);
+
+  if(!RT_SUCCESS(rc)) {
+    req.buffer = 0;
+  }
+  
+  PDMDevHlpPhysWrite(pDevIns, (RTGCPHYS)u32, &req, sizeof(req));
+  
+  return rc;
+}
+
+static DECLCALLBACK(int) vmmdevFastIOOpen(PPDMDEVINS pDevIns, void *pvUser, RTIOPORT Port, uint32_t u32, unsigned cb) {
+
+  FastIOOpen req;
+
+  PDMDevHlpPhysRead(pDevIns, (RTGCPHYS)u32, &req, sizeof(req));
+
+
+  // int rc = vbsfRead(0, root, Handle, offset, &count, pBuffer);
+
+  // if(!RT_SUCCESS(rc)) {
+    // req.buffer = 0;
+  // }
+  
+  PDMDevHlpPhysWrite(pDevIns, (RTGCPHYS)u32, &req, sizeof(req));
+ 
+  return 0;
+  // return rc;
+}
+
+#endif
+
+extern "C" DECLEXPORT(int) yokeFastIOMappingsAdd(
+                    SHFLSTRING* pFolderName, SHFLSTRING* pMapName,
+                    bool fWritable, bool fAutoMount, bool fSymlinksCreate,
+                    bool fMissing)
+{
+  return vbsfMappingsAdd(pFolderName, pMapName, fWritable, fAutoMount,
+                         fSymlinksCreate, fMissing);
+}
+
 /**
  * Port I/O Handler for the generic request interface
  * @see FNIOMIOPORTOUT for details.
@@ -811,6 +872,28 @@ static DECLCALLBACK(int) vmmdevRequestHandler(PPDMDEVINS pDevIns, void *pvUser, 
     VMMDevState *pThis = (VMMDevState*)pvUser;
     int rcRet = VINF_SUCCESS;
     PDMCritSectEnter(&pThis->CritSect, VERR_SEM_BUSY);
+
+#ifdef FAST_IO
+    if(Port == pThis->PortBase + VMMDEV_PORT_OFF_REQUEST + 1) {
+      LogRel(("vmmdev io port: %d\n", Port));
+
+      rcRet = vmmdevFastIORead(pDevIns, pvUser, Port, u32, cb);
+      PDMCritSectLeave(&pThis->CritSect);
+      return rcRet;
+    } else if(Port == pThis->PortBase + VMMDEV_PORT_OFF_REQUEST + 2) {
+      LogRel(("vmmdev io port: %d\n", Port));
+
+      rcRet = vmmdevFastIOOpen(pDevIns, pvUser, Port, u32, cb);
+      PDMCritSectLeave(&pThis->CritSect);
+      return rcRet;
+    // } else if(Port == pThis->PortBase + VMMDEV_PORT_OFF_REQUEST + 3) {
+      // LogRel(("vmmdev io port: %d\n", Port));
+
+      // rcRet = vmmdevFastIOClose(pDevIns, pvUser, Port, u32, cb);
+      // PDMCritSectLeave(&pThis->CritSect);
+      // return rcRet;
+    }
+#endif
 
     /*
      * The caller has passed the guest context physical address
@@ -2579,7 +2662,7 @@ static DECLCALLBACK(int) vmmdevIOPortRegionMap(PPCIDEVICE pPciDev, /*unsigned*/ 
      * Register our port IO handlers.
      */
     rc = PDMDevHlpIOPortRegister(pPciDev->pDevIns,
-                                 (RTIOPORT)GCPhysAddress + VMMDEV_PORT_OFF_REQUEST, 1,
+                                 (RTIOPORT)GCPhysAddress + VMMDEV_PORT_OFF_REQUEST, 2,
                                  (void*)pThis, vmmdevRequestHandler,
                                  NULL, NULL, NULL, "VMMDev Request Handler");
     AssertRC(rc);
